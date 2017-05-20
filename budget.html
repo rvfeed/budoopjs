@@ -1,0 +1,111 @@
+<html>
+    <head>
+        <script>
+        String.prototype.toString = function(){           
+            return "'"+this+"'";
+        }
+      //  console.log(new Object("hi").toString())        
+        function DataStorage(){
+            this.data = [];
+                        
+            this.searchData = function(input){                
+                return this.data[input.toString()];
+            }
+        }        
+        function Validation(){
+            //console.log(store);            
+           // var formSize = document.budget.length-1;
+            var form = [];                        
+            this.formValidation = function(d){
+                var formDup = {};
+                for( var x = 0; x < d.length-1; x++){
+                    if(d[x].value == ""){
+                        alert("Please enter "+d[x].name);
+                        return false;
+                        break;
+                    }                    
+                    formDup[d[x].name] = d[x].value
+                    if(d[x].name == "itemDate"){
+                        var date = d[x].value; 
+                        ///alert(date);
+                    }                                                          
+                }
+                //form[date] =  formDup;
+                if(!form["'"+date+"'"]) form["'"+date+"'"] =  [];
+                form["'"+date+"'"].push(formDup);
+                console.log(form)
+                console.log(store.data)
+
+                store.data = form;
+                return true;
+            }            
+        }
+        function Display(){
+           var HtmlOutput = function(data){
+               
+               var html = "";
+    
+                    html = data.itemName + "   "+ data.itemPrice+"   "+ data.itemDate+"\n";
+                  //  console.log(html);
+                return html;     
+            }
+            this.tempFunc = function(data){
+                for(var x in data){
+                    //console.log(data[i][x]);
+                    var node = document.createElement("div");
+                    var tnode = document.createTextNode(HtmlOutput(data[x]));
+                    node.appendChild(tnode);
+                    document.getElementById("result").appendChild(node);
+                }
+            }
+            this.showData = function(data){
+                console.log(data)
+            document.getElementById("result").innerHTML = "";
+
+            for(var i in data){  
+               // console.log(data[i])
+                   this.tempFunc(data[i]);             
+             }
+                
+            }
+            }
+        
+        var store = new DataStorage();
+        var valid = new Validation();
+        var disp = new Display();        
+        function save(){
+            var formSize = document.budget.length-1;                        
+           if(!valid.formValidation(document.budget)) return false;
+           disp.showData(store.data);           
+        }
+        function search(){
+            document.getElementById("result").innerHTML = "";
+            disp.tempFunc(store.searchData(document.getElementById("search").value));
+        }
+        </script>
+    </head>
+    <body><div>
+        <input type="text" id="search" name="search"/>
+        <button onclick="search()" value="Search" >Search</button>
+        </div>
+        <form name="budget">
+        <div style="width:300px">
+            
+        <div>
+        <input type="text" id="itemName" name="itemName"  value="n"/>
+        </div>
+        <div>
+        <input type="text" id="itemPrice" name="itemPrice"  value="p"/>
+        </div>
+        <div>
+        <input type="text" id="itemDate" name="itemDate"  value="d"/>
+        </div>
+        <div>
+        <input type="button" id="save1" onclick="save()" name="save1" value="Save" />
+        </div>
+        <div id="result"></div>
+        </div>
+        </form>
+        
+    </body>
+</html>
