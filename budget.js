@@ -70,3 +70,9 @@ console.dir(disp)
             document.getElementById("result").innerHTML = "";
             disp.tempFunc(store.searchData(document.getElementById("search").value));
         }
+
+        function xyz(a, b, c, d){
+            console.dir(Array.prototype.push.call(arguments, 7))
+            console.log(arguments)
+        }
+        xyz(1, 2, 3, 4);
