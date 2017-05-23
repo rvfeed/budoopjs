@@ -1,6 +1,7 @@
 <html>
     <head>
-        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
         <script>
         String.prototype.toString = function(){           
@@ -17,7 +18,7 @@
                 localStorage.setItem("data", data);
             }
             this.getData = function(){
-                return localStorage.getItem("data");
+                return localStorage.getItem("data") || [];
             }
         }        
         function Validation(){
@@ -95,6 +96,7 @@
     </head>
     <body>
         <div class="container">
+            <a href="budget_1.html" >budget</a>
   <div class="row">
     <div class="col-sm-12 col-md-9 col-lg-4">
          <div class="form-group">
