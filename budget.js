@@ -118,7 +118,7 @@ function add(data) {
                 .add(data);
                                  
         request.onsuccess = function(event) {
-                alert("Kenny has been added to your database.");
+              //  alert("Kenny has been added to your database.");
         };
          
         request.onerror = function(event) {
@@ -140,7 +140,7 @@ function read() {
           if(request.result) {
                 alert("Name: " + request.result.name + ", Age: " + request.result.age + ", Email: " + request.result.email);
           } else {
-                alert("Kenny couldn't be found in your database!"); 
+              //  alert("Kenny couldn't be found in your database!"); 
           }
         };
 }

@@ -1,30 +1,45 @@
 <html>
     <head>
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
         <script src="budget.js"></script>
     </head>
-    <body><div>
-        <input type="text" id="search" name="search"/>
+    <body><div class="row">
+    <div class="col-sm-12 col-md-9 col-lg-4">
+         <div class="form-group">
+        <input type="text" id="search" name="search" class="form-control" required/>
         <button onclick="search()" value="Search" >Search</button>
-        <button onclick="read()" value="Search" >Read</button>
+         </div>
+      <form name="budget">
+        <div class="infoMsg"ng-bind="msg"></div>
+        
+        <div class="form-group">
+          <label for="name">Type</label>
+          <input type="text" ng-model="budgetRow.item" name="itemType" id="itemType" class="form-control" required>
         </div>
-        <form name="budget">
-        <div style="width:300px">
-            
-        <div>
-        <input type="text" id="itemName" name="itemName"  value="n"/>
+                <div class="form-group">
+          <label for="name">Item</label>
+          <input type="text" ng-model="budgetRow.item" name="itemName" id="itemName" class="form-control" required>
         </div>
-        <div>
-        <input type="text" id="itemPrice" name="itemPrice"  value="p"/>
+        <div class="form-group">
+          <label for="price">Price</label>
+          <input type="text"  ng-model="budgetRow.price" id="itemPrice" name="itemPrice" class="form-control" required>
         </div>
-        <div>
-        <input type="text" id="itemDate" name="itemDate"  value="d"/>
+        <div class="form-group">
+          <label for="name">Date</label>
+          <input type="text" autoclose="true"  ng-model="budgetRow.date" id="itemDate" name="itemDate" class="form-control datepicker" required>
         </div>
-        <div>
-        <input type="button" id="save1" onclick="save()" name="save1" value="Save" />
+       
+        <input  type="button" class="btn btn-primary" value="Save" onclick="save()">
+        <input type="reset" class="btn btn-primary" value="Clear">
+      </form>
+    </div>
+  </div>
         </div>
+        
+
         <div id="result"></div>
-        </div>
-        </form>
         
     </body>
 </html>
