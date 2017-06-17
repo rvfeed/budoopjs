@@ -1,110 +1,32 @@
 <html>
     <head>
+        <title>My Budget</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="stylesheets/datepicker.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-        <script>
-        String.prototype.toString = function(){           
-            return "'"+this+"'";
-        }
-      //  console.log(new Object("hi").toString())        
-        function DataStorage(){
-            this.data = [];                        
-            this.searchData = function(input){  
-                var searchData = this.getData();              
-                return searchData[input.toString()];
-            }
-            this.saveData = function(data){
-                localStorage.setItem("data", data);
-            }
-            this.getData = function(){
-                return localStorage.getItem("data") || [];
-            }
-        }        
-        function Validation(){
-            //console.log(store);            
-           // var formSize = document.budget.length-1;
-            var form = [];                        
-            this.formValidation = function(d){
-                var formDup = {};
-                for( var x = 0; x < d.length-1; x++){
-                    if(d[x].value == ""){
-                        alert("Please enter "+d[x].name);
-                        return false;
-                        break;
-                    }                    
-                    formDup[d[x].name] = d[x].value
-                    if(d[x].name == "itemDate"){
-                        var date = d[x].value; 
-                        ///alert(date);
-                    }                                                          
-                }
-                //form[date] =  formDup;
-                form = store.getData();
-                if(!form["'"+date+"'"]) form["'"+date+"'"] =  [];
-                form["'"+date+"'"].push(formDup);
-                console.log(form)
-                console.log(store.data)
-
-                store.saveData(form);
-                return true;
-            }            
-        }
-        function Display(){
-           var HtmlOutput = function(data){
-               
-               var html = "";
-    
-                    html = data.itemName + "   "+ data.itemPrice+"   "+ data.itemDate+"\n";
-                  //  console.log(html);
-                return html;     
-            }
-            this.tempFunc = function(data){
-                for(var x in data){
-                    //console.log(data[i][x]);
-                    var node = document.createElement("div");
-                    var tnode = document.createTextNode(HtmlOutput(data[x]));
-                    node.appendChild(tnode);
-                    document.getElementById("result").appendChild(node);
-                }
-            }
-            this.showData = function(data){
-                console.log(data)
-            document.getElementById("result").innerHTML = "";
-
-            for(var i in data){  
-               // console.log(data[i])
-                   this.tempFunc(data[i]);             
-             }
-                
-            }
-            }
-        
-        var store = new DataStorage();
-        var valid = new Validation();
-        var disp = new Display();        
-        function save(){
-            var formSize = document.budget.length-1;                        
-           if(!valid.formValidation(document.budget)) return false;
-           disp.showData(store.getData());           
-        }
-        function search(){
-            document.getElementById("result").innerHTML = "";
-            disp.tempFunc(store.searchData(document.getElementById("search").value));
-        }
-        </script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>        
+        <script src="javascripts/bootstrap-datepicker.js"></script>
     </head>
     <body>
         <div class="container">
-            <a href="budget_1.html" >budget</a>
-  <div class="row">
-    <div class="col-sm-12 col-md-9 col-lg-4">
-         <div class="form-group">
-        <input type="text" id="search" name="search" class="form-control" required/>
-        <button onclick="search()" value="Search" >Search</button>
-         </div>
-      <form name="budget">
-        <div class="infoMsg"ng-bind="msg"></div>
+           <div class="row" >
+                          <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">My Budget</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="index.html">Home</a></li>
+      <li><a href="reports.html">Reports</a></li>
+    </ul>
+  </div>
+</nav>
+</div>
+        <div class="row" >
+    <div class="col-sm-12 col-md-5 col-lg-4">
+         <div class="alert" id="infoMsg"></div>
+      <form name="budget" style="clear: both">
+        
         
         <div class="form-group">
           <label for="name">Type</label>
@@ -123,16 +45,26 @@
           <input type="text" autoclose="true"  ng-model="budgetRow.date" id="itemDate" name="itemDate" class="form-control datepicker" required>
         </div>
        
-        <input  type="button" class="btn btn-primary" value="Save" onclick="save()">
+        <input  type="button" class="btn btn-primary" value="Save" onclick="save()"/>
         <input type="reset" class="btn btn-primary" value="Clear">
       </form>
     </div>
   </div>
+        
         </div>
-        
+      
+</div>
 
-        <div id="result"></div>
-    
-        
+   <script src="js/display.js"></script>     
+    <script src="js/dataStorage.js"></script>   
+    <script src="js/indexDB.js"></script>
+     <script src="js/validation.js"></script>
+    <script src="js/budget.js"></script>
+      <script type="text/javascript">
+  $(function () {
+    $('.datepicker').datepicker({ autoclose: true});
+    $('div.datepicker tbody').on('click', function(){  $('div.datepicker').hide() });
+  });
+</script>  
     </body>
 </html>
