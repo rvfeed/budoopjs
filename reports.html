@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>My Reports</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="stylesheets/datepicker.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>        
+        <script src="javascripts/bootstrap-datepicker.js"></script>
+        <script type="text/javascript" src="https://momentjs.com/downloads/moment.min.js"></script>
+    </head>
+        <body>
+             <div class="container">
+             <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">My Budget</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="index.html">Home</a></li>
+      <li class="active"><a href="reports.html">Reports</a></li>
+    </ul>
+  </div>
+</nav>
+                 <div class="form-group col-sm-12 col-md-5 col-lg-4">
+        <input type="text" id="search" style="width:70%; float: left;" name="search" class="form-control datepicker" required/>
+        <button style="float: left;" class="btn btn-primary" onclick="search()" value="Search" >Search</button>
+         </div>
+        <div id="result" style="clear:both;"></div>
+        
+            </div>
+               <script src="js/display.js"></script>     
+    <script src="js/dataStorage.js"></script> 
+    <script src="js/indexDB.js"></script>   
+   <script>
+     var indexDb = new IndexDBModal();
+     indexDb.IntiateDb(function(db){
+           db.readAll();
+       });
+    function search(){
+        document.getElementById("result").innerHTML = "";          
+        indexDb.read(document.getElementById("search").value);
+       } 
+   $(function () {
+    $('.datepicker').datepicker({ autoclose: true});
+    $('div.datepicker tbody').on('click', function(){  $('div.datepicker').hide() });
+  });
+            </script>
+        </body>
+ 
+</html>
