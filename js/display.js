@@ -35,7 +35,7 @@
                         td[n] = document.createElement("td");
                         var dd = x[tbodyData[n]];
                         if(tbodyData[n] == "itemDate")
-                          dd = moment(x[tbodyData[n]]).format("MMM Do, YYYY");
+                          dd = moment(new Date(x[tbodyData[n]])).format("MMM Do, YYYY");
                         textnode[n] = document.createTextNode(dd);
                         td[n].appendChild(textnode[n]);
                         tr.appendChild(td[n]); 
