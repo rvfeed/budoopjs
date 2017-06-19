@@ -10,7 +10,7 @@
     </head>
         <body>
              <div class="container">
-			  <div class="row" >
+                 <div class="row" >
              <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -22,27 +22,27 @@
     </ul>
   </div>
 </nav>
-</div>
-                 <div class="form-group col-sm-12 col-md-5 col-lg-4">
+        </div>
+        <div class="form-group col-sm-12 col-md-5 col-lg-4">
         <input type="text" id="search" style="width:70%; float: left;" name="search" class="form-control datepicker" required/>
         <button style="float: left;" class="btn btn-primary" onclick="search()" value="Search" >Search</button>
          </div>
+         <div class="alert"  style="clear:both;" id="infoMsg"></div>
         <div id="result" style="clear:both;"></div>
         
             </div>
-               <script src="js/display.js"></script>     
+            
+                  
     <script src="js/dataStorage.js"></script> 
-    <script src="js/indexDB.js"></script>   
+    <script src="js/indexDB.js"></script>
+     <script src="js/display.js"></script> 
+     <script src="js/opdb.js"></script>
+      <script src="js/validation.js"></script>
    <script>
-     var indexDb = new IndexDBModal();
-     indexDb.IntiateDb(function(db){
+   $(function () {
+        indexDb.IntiateDb(function(db){
            db.readAll();
        });
-    function search(){
-        document.getElementById("result").innerHTML = "";          
-        indexDb.read(document.getElementById("search").value);
-       } 
-   $(function () {
     $('.datepicker').datepicker({ autoclose: true});
     $('div.datepicker tbody').on('click', function(){  $('div.datepicker').hide() });
   });
