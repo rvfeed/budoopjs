@@ -1,4 +1,13 @@
 .alert {
     padding: 5px;
     margin-bottom: 15px;
+    margin-top: 5px;
 }
+input[type=checkbox]{
+    margin-top: 0px;
+}
+#checklistList .form-group > div {
+    padding: 5px;
+}
+.mtop-5 { margin-top:5px; }
+.mbottom-10 { margin-bottom: 10px; }

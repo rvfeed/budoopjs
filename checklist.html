@@ -1,78 +1,83 @@
-<!DOCTYPE html>
 <html>
-<head>
-     <link rel="stylesheet" href="stylesheets/bootstrap.min.css"/>
+    <head>
+        <title>My Budget</title>
+        <link rel="stylesheet" href="stylesheets/bootstrap.min.css"/>
         <link rel="stylesheet" href="stylesheets/datepicker.css">
+        <link rel="stylesheet" href="stylesheets/style.css">
         <script src="javascripts/jquery.min.js"></script>
-        <script src="javascripts/bootstrap.min.js"></script>  
-<style>
-body {
-    font-family: "Lato", sans-serif;
-}
-
-.sidenav {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background-color: #111;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 60px;
-}
-
-.sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-}
-
-.sidenav a:hover, .offcanvas a:focus{
-    color: #f1f1f1;
-}
-
-.sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-}
-
-@media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
-}
-</style>
-</head>
-<body>
-
-<div id="mySidenav" class="sidenav">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <a href="#">About</a>
-  <a href="#">Services</a>
-  <a href="#">Clients</a>
-  <a href="#">Contact</a>
+        <script src="javascripts/bootstrap.min.js"></script>        
+        <script src="javascripts/bootstrap-datepicker.js"></script>
+    </head>
+    <body>
+        <div class="container">
+           <div class="row" >
+       <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">My Budget</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="reports.html">Reports</a></li>
+      <li class="active"><a href="checklist.html">Check List</a></li>
+    </ul>
+  </div>
+</nav>
+ <form name="checklist" id="checklist" style="clear: both">
+    <div class="row">
+       
+         <div class="hidden" id="infoMsg"></div>
+       
+           <div class="form-group col-sm-7">
+               
+              <label for="checkListName">CheckList Name</label>
+              <input type="text" id="checkListName" value="checkListName" name="checkListName" class="form-control" required>
+          
+          </div>
+          <div class="form-group col-sm-7">
+          
+              <label for="itemDate">Purchase Date</label>
+              <input type="text" id="itemDate" value="06/21/2017" name="itemDate" class="form-control datepicker" required>
+          
+          </div>
+        
+         <div id="checklistArea" class="col-sm-12">
+            <div class="col-sm-5"><label>Item</label></div>
+            <div class="col-sm-2"><label>Quantity</label></div>
+            <div class="col-sm-5"></div>
+          </div>  
+        <div id="checklistList"> </div>
+        <div class="col-sm-12 mbottom-10">
+            <a href="javascript:void(0)" onclick="addCheckItem()"><span class="glyphicon glyphicon-plus"></span></a>
+        </div>
+       <div class="col-sm-12">
+           <input  type="button" class="btn btn-primary" value="Save" onclick="saveCheckList()"/>
+            <input type="reset" class="btn btn-primary" value="Clear"/>
+        </div>
+    
+    </div>
+         
+    </form> 
+  </div>
+     
+      
 </div>
 
-<h2>Animated Sidenav Example</h2>
-<p>Click on the element below to open the side navigation menu.</p>
-<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; open</span>
-
-<script>
-function openNav() {
-    document.getElementById("mySidenav").style.width = "250px";
-}
-
-function closeNav() {
-    document.getElementById("mySidenav").style.width = "0";
-}
-</script>
-     
-</body>
-</html> 
+   <script src="js/display.js"></script>     
+    <script src="js/dataStorage.js"></script>   
+    <script src="js/indexDB.js"></script>
+    <script src="js/opdb.js"></script>
+     <script src="js/validation.js"></script>
+    <script src="js/budget.js"></script>
+    <script src="js/checklist.js"></script>
+      <script type="text/javascript">
+  $(function () {
+      indexDb.IntiateDb(function(){
+          //disp.updateForm("index");
+      });
+    $('.datepicker').datepicker({ autoclose: true});
+    $('div.datepicker tbody').on('click', function(){  $('div.datepicker').hide() });
+});
+</script>  
+    </body>
+</html>

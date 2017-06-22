@@ -1,23 +1,23 @@
   
       function Display(tData, tHead){
-            var tableData = tData || ["itemName", "itemPrice", "itemDate"];
-            var tableHead = tHead || ["Name", "Price", "Date"];
+            this.tableData = tData || ["itemName", "itemPrice", "itemDate"];
+            this.tableHead = tHead || ["Name", "Price", "Date"];
             var self = this;
             this.oldDate = false;
             this.enteredDate = new Date().getTime();
             this.action = "add";
            this.getResultHead = function(){
-               return tableHead;
+               return this.tableHead;
            }
            this.getResultBody = function(){
-               return tableData;
+               return this.tableData;
            }
            this.setResultBody = function(arr){
-               tableData = arr || tableData;
+               this.tableData = arr || this.tableData;
                return this;
            }
            this.setResultHead = function(arr){
-               tableHead = arr || tableHead;
+               this.tableHead = arr || this.tableHead;
                return this;
            }
            this.getProperty = function(prop){
@@ -57,8 +57,8 @@
               }
          });
       }
-     
-  
+      
+      
     this.setHTMLUpdateById = function(id, prop, value){
        document.getElementById(id)[prop] = value;
    }
@@ -125,24 +125,34 @@
                 document.querySelector("table").setAttribute("class", "table table-striped");
              }
       }
-       Display.prototype.setFormUpdateData = function(op, data, callback){
+      Display.prototype.setFormUpdateData = function(op, data, callback){
                    opdb.deleteRecord(data, function(msg){
                        console.log(msg);
                         opdb.dbOperation(op, data, function(msg){
                         callback(msg);
-                   });
-               });
-           }
-            Display.prototype.getFormUpdateData = function(form, callback){
+                  });
+              });
+     }
+     Display.prototype.getFormUpdateData = function(form, callback){
                opdb.readRecord(form , function(data){
                    callback(data);
                })
-           }
-
+     }
+      Display.prototype.getElementSizeByClassName = function(prop, value){
+             var classSize = document.getElementsByClassName(prop) || [];
+         return classSize.length;
+   }
+    Display.prototype.removedChild = function(id, value){
+        var eid = document.getElementById(id);
+            eid.removeChild(eid.childNodes[value]);
+   }
      
-          Display.prototype.showMessage = function(msg, id){
+     Display.prototype.showMessage = function(msg, id){
               var className = "alert alert-warning";
               if(msg.indexOf("unable") === -1)  className = "alert alert-success";
               this.setHTMLUpdateById(id,"className", className);
               this.setHTMLUpdateById(id,"innerHTML", msg); 
         }
+          Display.prototype.emptyDivById = function(id){
+             document.getElementById(id).innerHTML = "";
+   }

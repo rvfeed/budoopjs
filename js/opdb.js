@@ -9,7 +9,10 @@ function InteractDB(){
     }
     this.getFinalData = function(res, input, op){
         if(op == "add" || res.length === 0){
-          res.push(input);  
+          if (input[0])
+            res = input;
+          else
+            res.push(input);  
           op = "add";
         } 
         else if(op == "update"){
