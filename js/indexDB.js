@@ -91,7 +91,7 @@ function IndexDBModal(){
             };
     }
     
-    this.readAll = function() {
+    this.readAll = function(callback) {
             var objectStore = db.transaction("budget").objectStore("budget");
        var temp = [];
        var count = 1;
@@ -108,12 +108,12 @@ function IndexDBModal(){
                     if(count <= 10)
                         cursor.continue();
                     else
-                        disp.showData(temp);
+                        callback(temp);
               }
               else {
                  // var display = new Display();
                   console.dir(temp)
-                  disp.showData(temp);
+                  callback(temp);
                   //  alert("No more entries!");
               }
             };     

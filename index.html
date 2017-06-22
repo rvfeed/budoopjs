@@ -3,6 +3,7 @@
         <title>My Budget</title>
         <link rel="stylesheet" href="stylesheets/bootstrap.min.css"/>
         <link rel="stylesheet" href="stylesheets/datepicker.css">
+        <link rel="stylesheet" href="stylesheets/style.css">
         <script src="javascripts/jquery.min.js"></script>
         <script src="javascripts/bootstrap.min.js"></script>        
         <script src="javascripts/bootstrap-datepicker.js"></script>
@@ -25,7 +26,7 @@
 </div>
         <div class="row" >
     <div class="col-sm-12 col-md-5 col-lg-4">
-         <div class="alert" id="infoMsg"></div>
+         <div class="hidden" id="infoMsg"></div>
       <form name="budget" style="clear: both">
                 <div class="form-group">
           <label for="name">Item</label>
@@ -41,6 +42,7 @@
         </div>
        <input type="hidden"  id="action" name="action" value="add">
        <input type="hidden"  id="enteredDate" name="enteredDate">
+       <input type="hidden"  id="oldDate" name="oldDate">
         <input  type="button" class="btn btn-primary" value="Save" onclick="save()"/>
         <input type="reset" class="btn btn-primary" value="Clear">
       </form>
@@ -59,6 +61,7 @@
     <script src="js/budget.js"></script>
       <script type="text/javascript">
   $(function () {
+      var disp = new Display();
       indexDb.IntiateDb(function(){
           disp.updateForm("index");
       });

@@ -1,7 +1,6 @@
     function Validation(){}
-    Validation.prototype = Display.prototype;
         Validation.prototype.formData = function(d, cb){
-              var formDup = {}, date, ele = this.getResultBody();
+              var formDup = {}, date, ele = disp.getResultBody();
               ele.forEach(function(e){
                    if(e == "itemDate"){
                         date = d[e].value;                         
@@ -14,7 +13,7 @@
         }
     Validation.prototype.formValidation = function(d){
                 var that = this;
-                var form = this.getResultBody();
+                var form = disp.getResultBody();
                 for( var x = 0; x < form.length; x++){
                     if(d[form[x]].value == ""){
                         alert("Please enter "+d[form[x]].name);
@@ -36,7 +35,7 @@
         }
    function search(){
         document.getElementById("result").innerHTML = "";
-         opdb.readRecords("read", document.getElementById("search").value, function(res){
+         opdb.readRecord(disp.getHTMLValueById("search") , function(res){
             disp.showData(res);
         });
        } 

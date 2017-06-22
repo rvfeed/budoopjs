@@ -1,47 +1,50 @@
-  var Display = (function(){
-       var tbodyData = ["itemName", "itemPrice", "itemDate"];
-       var thHead = ["Name", "Price", "Date"];
-       var Display = function(){
+  
+      function Display(tData, tHead){
+            var tableData = tData || ["itemName", "itemPrice", "itemDate"];
+            var tableHead = tHead || ["Name", "Price", "Date"];
             var self = this;
+            this.oldDate = false;
+            this.enteredDate = false;
+            this.action = false;
            this.getResultHead = function(){
-               return thHead;
+               return tableHead;
            }
            this.getResultBody = function(){
-               return tbodyData;
+               return tableData;
            }
-           this.setFormUpdateData = function(op, data, callback){
-                   opdb.deleteRecord(data, function(msg){
-                       console.log(msg);
-                        opdb.dbOperation(op, data, function(msg){
-                        callback(msg);
-                   });
-               });
+           this.setResultBody = function(arr){
+               tableData = arr || tableData;
+               return this;
            }
-            this.getFormUpdateData = function(form, callback){
-               opdb.readRecords("read",form , function(data){
-                   callback(data);
-               })
+           this.setResultHead = function(arr){
+               tableHead = arr || tableHead;
+               return this;
            }
+          
            var formAction = function(c, data, form){
-              
                if(c == "update"){
                    data.id = "index";
                    self.setFormUpdateData("add", data, function(msg){
                        window.location.href = form+".html";
                    });
                    return;
+               }else{
+                  opdb.dbOperation(c, data, function(msg){
+                       self.showMessage(msg, "infoMsg");
+                       opdb.readAllRecords(function(res) {
+                           disp.showData(res);
+                       });
+                 }); 
                }
-                opdb.dbOperation(c, data, function(msg){
-                                            self.showMessage(msg, "infoMsg");
-                                    });
+                
            }
-           this.showData = function(data){
-                 var tbodyData = ["itemName", "itemPrice", "itemDate", "DELETE", "UPDATE"];
-                 var thHead = ["Name", "Price", "Date", "", ""];
+           this.showData = function(data, tbody, thead){
+               var tbodyData = this.setResultBody(tbody).getResultBody();
+               var thHead = this.setResultHead(thead).getResultHead();
                var table = document.createElement("table"),
                    thead = document.createElement("thead"),
                    tbody = document.createElement("tbody");
-                var tr = document.createElement("tr"), th = {}, textnode = {};
+               var tr = document.createElement("tr"), th = {}, textnode = {};
                var that = this;
                 document.getElementById("result").innerHTML = "";
                 for(var i in thHead){
@@ -64,8 +67,13 @@
                           dd = moment(new Date(x[tbodyData[n]])).format("MMM Do, YY");
                           textnode[n] = document.createTextNode(dd);
                           }else if(tbodyData[n] == "DELETE" || tbodyData[n] == "UPDATE") {
-                              var button = document.createElement("button");
+                              var button = document.createElement("a");
                                button["className"] = "btn";
+                               button["href"] = "javascript:void(0)";
+                                if(tbodyData[n] == "DELETE")
+                                    button["innerHTML"] = '<span class="glyphicon glyphicon-trash"></span>';
+                                else
+                                    button["innerHTML"] = '<span class="glyphicon glyphicon-pencil"></span>';
                                var input = {"id": x.itemDate, "enteredDate": x.enteredDate, "data": x}
                               button["onclick"] = function(c, d, form){ 
                                   return function(){
@@ -73,8 +81,6 @@
                                   }
                               }(tbodyData[n].toLowerCase(), input, "index")
                               button.attributes["class"] = "btn";
-                              var delData = document.createTextNode(tbodyData[n]);
-                              button.appendChild(delData);
                               textnode[n] = button;
                           }else{
                               textnode[n] = document.createTextNode(dd);
@@ -89,19 +95,30 @@
                 document.querySelector("table").setAttribute("class", "table table-striped");
              }
       }
+       Display.prototype.setFormUpdateData = function(op, data, callback){
+                   opdb.deleteRecord(data, function(msg){
+                       console.log(msg);
+                        opdb.dbOperation(op, data, function(msg){
+                        callback(msg);
+                   });
+               });
+           }
+            Display.prototype.getFormUpdateData = function(form, callback){
+               opdb.readRecord(form , function(data){
+                   callback(data);
+               })
+           }
 
-              Display.prototype.getResultBody = function(){
-             return tbodyData;
-      }
       Display.prototype.updateForm = function(form){
           var that = this;
           this.getFormUpdateData(form, function(res){
               if(res.length){
-                   tbodyData.forEach(function(id){
+                   that.getResultBody().forEach(function(id){
                     that.setHTMLUpdateById(id, "value",res[0].data[id]);
                 });
-                that.setHTMLUpdateById("action", "value", "update");
-                that.setHTMLUpdateById("enteredDate", "value", res[0].data["enteredDate"]);
+                that.setHiddenProp("action", "update");
+                that.setHiddenProp("enteredDate", res[0].data["enteredDate"]);
+                that.setHiddenProp("oldDate",res[0].data["itemDate"]);
                 opdb.deleteRecord({"id":form}, function(msg){
                      console.log(msg);
                 });
@@ -109,14 +126,15 @@
          });
       }
      
-      return Display;
-     }());
-    
+  
     Display.prototype.setHTMLUpdateById = function(id, prop, value){
        document.getElementById(id)[prop] = value;
    }
+   Display.prototype.setHiddenProp = function(prop, value){
+       this[prop] = value;
+   }
    Display.prototype.getHTMLValueById = function(id){
-       return document.getElementById(id).value;
+       return document.getElementById(id).value || false;
    }
           Display.prototype.showMessage = function(msg, id){
               var className = "alert alert-warning";
