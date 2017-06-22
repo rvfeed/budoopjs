@@ -13,7 +13,8 @@ function InteractDB(){
           op = "add";
         } 
         else if(op == "update"){
-                res.splice(this.findItemIndex("enteredDate", input.enteredDate, res), 1);
+                if(input.id === disp.oldDate)
+                    res.splice(this.findItemIndex("enteredDate", input.enteredDate, res), 1);
                 input.enteredDate = disp.enteredDate;
                 res.push(input);
             }
