@@ -18,7 +18,7 @@ function InteractDB(){
                 res.push(input);
             }
         if(res.length > 1){
-            if(opr == "delete")
+            if(op == "delete")
                res.splice(this.findItemIndex("enteredDate", input.enteredDate, res), 1);
             op = "update";
         }
@@ -53,14 +53,16 @@ function InteractDB(){
         that.readRecord(input.id, function(res){
            var result = that.getFinalData(res, input, operation);
             indexDb[result.action](result.data, function(msg){
-                   if(disp.oldDate && input.id !== disp.oldDate){
+                   if(disp.getProperty("oldDate") && input.id !== disp.oldDate){
                        input.id = disp.oldDate;
-                       that.dbOperation("update", input, function(msg){
+                       that.dbOperation("delete", input, function(msg){
+                           if(result.action == "updated")
+                               msg = msg.replace("deleted", "updated");
                           done(msg);
                        })
-                   }else{
+                   }else
                         done(msg);
-                   }
+                   
             });
         });
     }

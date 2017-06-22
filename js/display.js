@@ -4,8 +4,8 @@
             var tableHead = tHead || ["Name", "Price", "Date"];
             var self = this;
             this.oldDate = false;
-            this.enteredDate = false;
-            this.action = false;
+            this.enteredDate = new Date().getTime();
+            this.action = "add";
            this.getResultHead = function(){
                return tableHead;
            }
@@ -19,6 +19,9 @@
            this.setResultHead = function(arr){
                tableHead = arr || tableHead;
                return this;
+           }
+           this.getProperty = function(prop){
+               return this[prop];
            }
           
            var formAction = function(c, data, form){
@@ -38,6 +41,33 @@
                }
                 
            }
+        this.updateForm = function(form){
+          var that = this;
+          this.getFormUpdateData(form, function(res){
+              if(res.length){
+                   that.getResultBody().forEach(function(id){
+                    that.setHTMLUpdateById(id, "value",res[0].data[id]);
+                });
+                that.setHiddenProp("action", "update");
+                that.setHiddenProp("enteredDate", res[0].data["enteredDate"]);
+                that.setHiddenProp("oldDate",res[0].data["itemDate"]);
+                opdb.deleteRecord({"id":form}, function(msg){
+                     console.log(msg);
+                });
+              }
+         });
+      }
+     
+  
+    this.setHTMLUpdateById = function(id, prop, value){
+       document.getElementById(id)[prop] = value;
+   }
+   this.setHiddenProp = function(prop, value){
+       this[prop] = value;
+   }
+   this.getHTMLValueById = function(id){
+       return document.getElementById(id).value || false;
+   }
            this.showData = function(data, tbody, thead){
                var tbodyData = this.setResultBody(tbody).getResultBody();
                var thHead = this.setResultHead(thead).getResultHead();
@@ -109,33 +139,7 @@
                })
            }
 
-      Display.prototype.updateForm = function(form){
-          var that = this;
-          this.getFormUpdateData(form, function(res){
-              if(res.length){
-                   that.getResultBody().forEach(function(id){
-                    that.setHTMLUpdateById(id, "value",res[0].data[id]);
-                });
-                that.setHiddenProp("action", "update");
-                that.setHiddenProp("enteredDate", res[0].data["enteredDate"]);
-                that.setHiddenProp("oldDate",res[0].data["itemDate"]);
-                opdb.deleteRecord({"id":form}, function(msg){
-                     console.log(msg);
-                });
-              }
-         });
-      }
      
-  
-    Display.prototype.setHTMLUpdateById = function(id, prop, value){
-       document.getElementById(id)[prop] = value;
-   }
-   Display.prototype.setHiddenProp = function(prop, value){
-       this[prop] = value;
-   }
-   Display.prototype.getHTMLValueById = function(id){
-       return document.getElementById(id).value || false;
-   }
           Display.prototype.showMessage = function(msg, id){
               var className = "alert alert-warning";
               if(msg.indexOf("unable") === -1)  className = "alert alert-success";

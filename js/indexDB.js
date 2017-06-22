@@ -1,6 +1,5 @@
 function IndexDBModal(){
    var db;
-   var disp = new Display();
     this.IntiateDb = function(fn){
             console.log(fn)
              var that = this;
