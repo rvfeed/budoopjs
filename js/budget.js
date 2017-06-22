@@ -4,9 +4,11 @@ String.prototype.toString = function(){
 
 function save(){
     var formSize = document.budget.length-1;                        
-    valid.formValidation(document.budget, function(formDup){
-          opdb.dbOperation("add", formDup, function(msg){
+    if(valid.formValidation(document.budget)){
+        valid.formData(document.budget,  function(formDup){
+          opdb.dbOperation(disp.getHTMLValueById("action"), formDup, function(msg){
                  disp.showMessage(msg, "infoMsg");
           });
-    });
+      }); 
+    }
 }

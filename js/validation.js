@@ -1,43 +1,48 @@
-    function Validation(){
-    
-            
+    function Validation(){}
+    Validation.prototype = Display.prototype;
+        Validation.prototype.formData = function(d, cb){
+              var formDup = {}, date, ele = this.getResultBody();
+              ele.forEach(function(e){
+                   if(e == "itemDate"){
+                        date = d[e].value;                         
+                    }
+                    formDup[e] = d[e].value
+              });
+              formDup.id = date;
+              formDup.enteredDate = new Date().getTime();
+              cb(formDup);
         }
-        String.prototype.isNumber = function(){
-            return !isNaN(this.valueOf())
-        }
-             Validation.prototype.formValidation = function(d, cb){
-                var formDup = {};
+    Validation.prototype.formValidation = function(d){
                 var that = this;
-                for( var x = 0; x < d.length-1; x++){
-                    if(d[x].value == ""){
-                        alert("Please enter "+d[x].name);
+                var form = this.getResultBody();
+                for( var x = 0; x < form.length; x++){
+                    if(d[form[x]].value == ""){
+                        alert("Please enter "+d[form[x]].name);
                         d[x].focus();
                         return false;
                         break;
                     }                   
-                    if(d[x].name == "itemDate"){
-                        var date = d[x].value;                         
-                    }
-                     if(d[x].name == "itemPrice"){
-                        if(!d[x].value.isNumber()){
-                            alert("Please enter valid "+d[x].name);
+                     if(d[form[x]].name == "itemPrice"){
+                        if(!d[form[x]].value.isNumber()){
+                            alert("Please enter valid "+d[form[x]].name);
+                            return false;
                         }                         
                     }
-                   // alert(d[x].value)
-                    formDup[d[x].name] = d[x].value
-                }                
-                formDup.id = date;
-                formDup.enteredDate = new Date().getTime();
-                cb(formDup);
-            } 
+                }    
+                return true;
+            }
+        String.prototype.isNumber = function(){
+            return !isNaN(this.valueOf())
+        }
    function search(){
-        document.getElementById("result").innerHTML = "";          
-        opdb.readRecords("read", document.getElementById("search").value, function(res){
-             disp.showData(res);
+        document.getElementById("result").innerHTML = "";
+         opdb.readRecords("read", document.getElementById("search").value, function(res){
+            disp.showData(res);
         });
        } 
+       
 var valid = new Validation();
 var indexDb = new IndexDBModal();
 var opdb = new InteractDB();
 var disp = new Display();
-indexDb.IntiateDb();
+

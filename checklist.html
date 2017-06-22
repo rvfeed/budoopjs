@@ -39,8 +39,7 @@
           <label for="name">Date</label>
           <input type="text" autoclose="true"  ng-model="budgetRow.date" id="itemDate" name="itemDate" class="form-control datepicker" required>
         </div>
-       <input type="hidden"  id="action" name="action" value="add">
-       <input type="hidden"  id="enteredDate" name="enteredDate">
+       
         <input  type="button" class="btn btn-primary" value="Save" onclick="save()"/>
         <input type="reset" class="btn btn-primary" value="Clear">
       </form>
@@ -59,12 +58,8 @@
     <script src="js/budget.js"></script>
       <script type="text/javascript">
   $(function () {
-      indexDb.IntiateDb(function(){
-          disp.updateForm("index");
-      });
     $('.datepicker').datepicker({ autoclose: true});
     $('div.datepicker tbody').on('click', function(){  $('div.datepicker').hide() });
-    
   });
 </script>  
     </body>

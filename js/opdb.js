@@ -1,20 +1,22 @@
 function InteractDB(){
+    this.findItemIndex = function(lhs, rhs, res){
+        return res.findIndex(function(ele){
+                return ele[lhs] == rhs
+            });
+    }
     this.getFinalData = function(res, input, op){
-        var opr = op;
-          if(opr == "add"){
+        if(op == "add"){
+          res.push(input);  
+        } 
+        else if(op == "update"){
+                res.splice(this.findItemIndex("enteredDate", input.enteredDate, res), 1);
+                input.enteredDate = disp.getHTMLValueById("enteredDate");
                 res.push(input);
-          }
+            }
         if(res.length > 1){
+            if(opr == "delete")
+               res.splice(this.findItemIndex("enteredDate", input.enteredDate, res), 1);
             op = "update";
-            if(opr == "add"){
-                return {"data":{"id":input.id, "data": res}, "action": op};
-            }
-            
-            for(var m in res){
-                if(res[m].enteredDate == input.enteredDate){
-                    res.splice(m, 1)
-                }
-            }
         }
         return {"data":{"id":input.id, "data": res}, "action": op};
     }
@@ -27,6 +29,14 @@ function InteractDB(){
             cb(res);
         });
     }
+    //used foe read and readAll operations
+     InteractDB.prototype.deleteRecord = function(input, cb){
+        indexDb.delete(input, function(res){
+            console.log(res);
+            cb(res);
+        });
+    }
+    
     
     //used for add, update and delete operations
     InteractDB.prototype.dbOperation = function(operation, input, done){
