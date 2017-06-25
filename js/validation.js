@@ -1,16 +1,16 @@
     function Validation(){
         this.currentFormKeyId = "";
-        this.dataToBeSaved = {};
-        this.setDataToBeSave = function(val){
-            this.dataToBeSaved = val;
-            return this;
-        }
-        this.setDataToBeSave = function(val){
-            return this.dataToBeSaved = val;
-        }
-      
-        
     }
+    Validation.prototype = InteractDB.prototype;
+    Validation.prototype.setDataToBeSaved = function(){
+            var dataFormat = {};
+            dataFormat.items = this.items;
+            dataFormat.name = this.currentFormName;
+            this.dataToBeSaved = dataFormat;
+        }
+        Validation.prototype.getDataToBeSaved = function(){
+            return this.dataToBeSaved;
+        }
       Validation.prototype.setCurrentFormKeyId = function(form){
             this.currentFormKeyId = form;
             return this;
@@ -20,7 +20,7 @@
         }
     
     Validation.prototype.formDataMulti = function(d){
-              var formDup = {}, date, arr = [], ex ={};
+              var formDup = {}, date, items = [], tempData = {};
               console.log(d);
               for(var n = 0; n < this.numOfitems; n++){
               this.formElements.forEach(function(e){
@@ -33,14 +33,12 @@
                         console.log(f+"----"+d[f].value);
                         formDup[e] = d[f].value
                     }
-                    
               });
               formDup.enteredDate = new Date().getTime();
-              arr[n] = formDup;
-              }
-
-             this.dataToBeSaved[this.formName] = arr;
-             ex.id = this.getCurrentFormKeyId();
+              items[n] = formDup;
+             }
+             this.dataToBeSaved.items = items;
+             this.dataToBeSaved.name = this.currentFormName;
         }
    Validation.prototype.formData = function(d){
               var formDup = {}, date, ele = this.formElements, arr = [];
@@ -90,7 +88,4 @@
        } 
        
 var valid = new Validation();
-var indexDb = new IndexDBModal();
-var opdb = new InteractDB();
-var disp = new Display();
 

@@ -156,3 +156,4 @@
           Display.prototype.emptyDivById = function(id){
              document.getElementById(id).innerHTML = "";
    }
+   var disp = new Display();

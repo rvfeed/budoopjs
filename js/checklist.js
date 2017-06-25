@@ -6,9 +6,12 @@ function ChecklistItem(m){
                           '<div class="col-sm-1"><select class="form-control" name="itemQtyType'+i+'" id="itemQtyType'+i+'"><option>Pc</option><option>gms</option><option>kg</option></select></div>'+
                          '<div class="col-sm-5" style="padding: 15px"><span class="glyphicon glyphicon-trash" onclick="removeChildItem('+i+')"></span></div>';
       };
-      this.formName = "checklist";
+      this.items = [];
+      this.dataFormat = {"items":[], "name": ""};
+      this.currentFormName = "checklist";
       this.appendCLItem = 0;
-      this.formElements = ["itemDate", "formName", "itemName", "itemQty", "itemQtyType"]
+      this.formElements = ["itemDate", "formName", "itemName", "itemQty", "itemQtyType"];
+      this.dataToBeSaved = {};
       this.setHtmlChecklist = function(i){
           htmlChecklist(i);
           return this;
@@ -48,7 +51,10 @@ function ChecklistItem(m){
           
       }
   }
-  ChecklistItem.prototype = Validation.prototype;
+  ChecklistItem.prototype = Validation.prototype
+  ChecklistItem.prototype.getCurrentFormName = function(){
+      return this.currentFormName;
+  }
    var clist = new ChecklistItem(1);
    clist.appendChecklistItems();
    
@@ -77,9 +83,9 @@ function ChecklistItem(m){
     disp.setResultBody(arr);
     var date = disp.getHTMLValueById('itemDate').replaceAll("/", "");
     clist.setCurrentFormKeyId("checklist"+date.replaceAll("'", ""));
-    clist.formName = disp.getHTMLValueById("checkListName");
+    clist.currentFormName = disp.getHTMLValueById("checkListName");
         clist.formDataMulti(document.checklist);
-        opdb.dbOperation(disp.action, clist.dataToBeSaved, function(msg){
+        clist.dbOperation(disp.action, clist.dataToBeSaved, function(msg){
                  disp.showMessage(msg, "infoMsg");
         }); 
   }

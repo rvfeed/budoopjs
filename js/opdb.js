@@ -1,40 +1,30 @@
-function InteractDB(){
-    this.findItemIndex = function(lhs, rhs, res){
+function InteractDB(){};
+    InteractDB.prototype.findItemIndex = function(lhs, rhs, res){
         return res.findIndex(function(ele){
                 return ele[lhs] == rhs
             });
     }
-    this.isSameDate = function(oldDate, newDate){
+    InteractDB.prototype.isSameDate = function(oldDate, newDate){
         return oldDate === newDate;
     }
-    this.getFinalData = function(res, input, op){
-        if(op == "add" || res.length === 0){
-          if (input[0])
-            res = input;
-          else
-            res.push(input);  
-          op = "add";
-        } 
-        else if(op == "update"){
-                if(input.id === disp.oldDate)
-                    res.splice(this.findItemIndex("enteredDate", input.enteredDate, res), 1);
-                input.enteredDate = disp.enteredDate;
-                res.push(input);
-            }
-        if(res.length > 1){
-            if(op == "delete")
-               res.splice(this.findItemIndex("enteredDate", input.enteredDate, res), 1);
-            op = "update";
-        }
-        return {"data":{"id":input.id, "data": res}, "action": op};
-    }
-}
-    
     //used foe read and readAll operations
-     InteractDB.prototype.readRecord = function(input, cb){
-        indexDb.read(input, function(res){
+     InteractDB.prototype.readRecord = function(cb){
+        indexDb.read(this.getCurrentFormKeyId(), function(res){
             cb(res);
         });
+    }
+    InteractDB.prototype.determineAction = function(res, op){
+        if(this.getCurrentFormKeyId() == res.id && op == "add"){
+            op = "update";
+        }
+        return op;
+    }
+    InteractDB.prototype.getFinalData = function(res, input, op){
+        op = this.determineAction(res, op)
+        if(op == "add" || op == "update"){
+            res[this.getCurrentFormName()] = input;
+        }
+        return {"data":{"id": this.getCurrentFormKeyId(), "data": res}, "action": op};
     }
       //used for readAll operations
      InteractDB.prototype.readAllRecords = function(cb){
@@ -54,20 +44,13 @@ function InteractDB(){
     //used for add, update and delete operations
     InteractDB.prototype.dbOperation = function(operation, input, done){
         var that = this;
-        that.readRecord(input.id, function(res){
+        that.readRecord(function(res){
            var result = that.getFinalData(res, input, operation);
             indexDb[result.action](result.data, function(msg){
-                   if(disp.getProperty("oldDate") && input.id !== disp.oldDate){
-                       input.id = disp.oldDate;
-                       that.dbOperation("delete", input, function(msg){
-                           if(result.action == "updated")
-                               msg = msg.replace("deleted", "updated");
-                          done(msg);
-                       })
-                   }else
                         done(msg);
                    
             });
         });
     }
 
+var opdb = new InteractDB();

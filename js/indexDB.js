@@ -118,3 +118,4 @@ function IndexDBModal(){
             };     
     }
 }
+var indexDb = new IndexDBModal();
