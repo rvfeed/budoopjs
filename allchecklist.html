@@ -34,22 +34,25 @@
          <div class="hidden"  style="clear:both;" id="infoMsg"></div>
         <div id="result" style="clear:both;"></div>
         </div>
-                
-   <script src="js/opdb.js"></script>
-     <script src="js/validation.js"></script>
-   <script src="js/display.js"></script>     
+                <script src="js/opdb.js"></script>
+     <script src="js/validation.js"></script> 
+    <script src="js/display.js"></script>     
     <script src="js/dataStorage.js"></script>   
     <script src="js/indexDB.js"></script>
+   
     <script src="js/checklist.js"></script>
     <script src="js/budget.js"></script>
+      
    <script>
    $(function () {
          
         indexDb.IntiateDb(function(db){
            db.readAll(function(res){
-               var tableData = ["itemName", "itemPrice", "itemDate", "DELETE", "UPDATE"];
-                var tableHead = ["Name", "Price", "Date", "", ""];
-               disp.showData(res, tableData, tableHead);
+               console.log(res);
+              // return;
+               var tableData = ["name", "itemQty", "checkListDate", "DELETE", "UPDATE"];
+                var tableHead = ["Name", "Quantity", "Date", "", ""];
+               disp.showData(res, tableData, tableHead, "checklist");
            });
        });
     $('.datepicker').datepicker({ autoclose: true});

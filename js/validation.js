@@ -20,9 +20,10 @@
         }
     
     Validation.prototype.formDataMulti = function(d){
-              var formDup = {}, date, items = [], tempData = {};
+              var  date, items = [], tempData = {};
               console.log(d);
               for(var n = 0; n < this.numOfitems; n++){
+                   var formDup = {};
               this.formElements.forEach(function(e){
                   if(e == "formName") return;
                    if(e == "itemDate"){
@@ -35,10 +36,11 @@
                     }
               });
               formDup.enteredDate = new Date().getTime();
-              items[n] = formDup;
+              items.push(formDup);
              }
              this.dataToBeSaved.items = items;
              this.dataToBeSaved.name = this.currentFormName;
+             this.dataToBeSaved.checkListDate = date;
         }
    Validation.prototype.formData = function(d){
               var formDup = {}, date, ele = this.formElements, arr = [];
@@ -73,12 +75,7 @@
                 }    
                 return true;
             }
-        String.prototype.isNumber = function(){
-            return !isNaN(this.valueOf())
-        }
-           String.prototype.getNumber = function(){
-            return this.valueOf();
-        }
+      
         
    function search(){
         document.getElementById("result").innerHTML = "";
@@ -88,4 +85,3 @@
        } 
        
 var valid = new Validation();
-

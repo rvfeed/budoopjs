@@ -24,6 +24,7 @@
   </div>
 </nav>
  <form name="checklist" id="checklist" style="clear: both">
+     <div class="row"><a href="allchecklist.html">view All</a></div>
     <div class="row">
        
          <div class="hidden" id="infoMsg"></div>
@@ -62,22 +63,24 @@
      
       
 </div>
-
+   <script src="js/lib.js"></script>
+  <script src="js/opdb.js"></script>
+     <script src="js/validation.js"></script>
    <script src="js/display.js"></script>     
     <script src="js/dataStorage.js"></script>   
     <script src="js/indexDB.js"></script>
-    <script src="js/opdb.js"></script>
-     <script src="js/validation.js"></script>
+    <script src="js/form.js"></script>
     <script src="js/checklist.js"></script>
-    
-    <script src="js/budget.js"></script>
-      <script type="text/javascript">
+    <script type="text/javascript">
+  var clist = new ChecklistItem();
   $(function () {
       indexDb.IntiateDb(function(){
-          //disp.updateForm("index");
+          clist.setCurrentFormKeyId("checklist");
+          clist.updateForm();
       });
+    
     $('.datepicker').datepicker({ autoclose: true});
-    $('div.datepicker tbody').on('click', function(){  $('div.datepicker').hide() });
+    $('div.datepicker tbody').on('click', function(){  $('div.datepicker').hide(); });
 });
 </script>  
     </body>

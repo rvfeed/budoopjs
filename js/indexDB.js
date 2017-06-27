@@ -86,7 +86,7 @@ function IndexDBModal(){
             request.onsuccess = function(event) {
                 console.log("okkSucc")
             //  if(request.result)
-              if(callback) callback((request.result)?request.result.data|| []:[]);
+              if(callback) callback((request.result)?request.result|| []:[]);
             };
     }
     
@@ -101,7 +101,7 @@ function IndexDBModal(){
                     console.log(cursor.value.data);
                     for(var x in cursor.value.data){
                      count++;
-                        temp.push(cursor.value.data[x]);
+                        temp.push({"res": cursor.value.data[x], "id": cursor.key});
                     }
                     //alert("Name for id " + cursor.key + " is " + cursor.value.name + ", Age: " + cursor.value.age + ", Email: " + cursor.value.email);
                     if(count <= 10)

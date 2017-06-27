@@ -25,14 +25,18 @@
            }
           
            var formAction = function(c, data, form){
+               BaseForm.prototype.setCurrentFormUinqName.call(self, "checklist");
+               //self.setCurrentFormUinqName("checklist");
                if(c == "update"){
-                   data.id = "index";
+                    self.setCurrentFormKeyId(form);
+                   data.id = form;
                    self.setFormUpdateData("add", data, function(msg){
                        window.location.href = form+".html";
                    });
                    return;
                }else{
-                  opdb.dbOperation(c, data, function(msg){
+                   self.setCurrentFormKeyId(data.id);
+                  self.dbOperation(c, data, function(msg){
                        self.showMessage(msg, "infoMsg");
                        opdb.readAllRecords(function(res) {
                            disp.showData(res);
@@ -41,23 +45,8 @@
                }
                 
            }
-        this.updateForm = function(form){
-          var that = this;
-          this.getFormUpdateData(form, function(res){
-              if(res.length){
-                   that.getResultBody().forEach(function(id){
-                    that.setHTMLUpdateById(id, "value",res[0].data[id]);
-                });
-                that.setHiddenProp("action", "update");
-                that.setHiddenProp("enteredDate", res[0].data["enteredDate"]);
-                that.setHiddenProp("oldDate",res[0].data["itemDate"]);
-                opdb.deleteRecord({"id":form}, function(msg){
-                     console.log(msg);
-                });
-              }
-         });
-      }
       
+    
       
     this.setHTMLUpdateById = function(id, prop, value){
        document.getElementById(id)[prop] = value;
@@ -68,9 +57,10 @@
    this.getHTMLValueById = function(id){
        return document.getElementById(id).value || false;
    }
-           this.showData = function(data, tbody, thead){
-               var tbodyData = this.setResultBody(tbody).getResultBody();
-               var thHead = this.setResultHead(thead).getResultHead();
+           this.showData = function(data, tbody, thead, page){
+               console.log("pppppppppppp")
+               var tbodyData = tbody;
+               var thHead = thead;
                var table = document.createElement("table"),
                    thead = document.createElement("thead"),
                    tbody = document.createElement("tbody");
@@ -89,12 +79,15 @@
                 var td = {}, textnode = {}; 
                 for(var i in data){
                     var tr = document.createElement("tr");
-                     var x= data[i];
+                     var x= data[i].res;
+                     
                      for(var n in tbodyData){
                         td[n] = document.createElement("td");
                         var dd = x[tbodyData[n]];
-                        if(tbodyData[n] == "itemDate"){
-                          dd = moment(new Date(x[tbodyData[n]])).format("MMM Do, YY");
+                        if(tbodyData[n] == "itemQty"){
+                            textnode[n] = document.createTextNode(x.items.length); 
+                        }else if(tbodyData[n] == "itemDate"){
+                          dd = moment(new Date(x.items[tbodyData[n]])).format("MMM Do, YY");
                           textnode[n] = document.createTextNode(dd);
                           }else if(tbodyData[n] == "DELETE" || tbodyData[n] == "UPDATE") {
                               var button = document.createElement("a");
@@ -104,12 +97,13 @@
                                     button["innerHTML"] = '<span class="glyphicon glyphicon-trash"></span>';
                                 else
                                     button["innerHTML"] = '<span class="glyphicon glyphicon-pencil"></span>';
-                               var input = {"id": x.itemDate, "enteredDate": x.enteredDate, "data": x}
+                               var input = x;
+                               input.id = data[i].id;
                               button["onclick"] = function(c, d, form){ 
                                   return function(){
                                       formAction(c, d, form);
                                   }
-                              }(tbodyData[n].toLowerCase(), input, "index")
+                              }(tbodyData[n].toLowerCase(), input, page)
                               button.attributes["class"] = "btn";
                               textnode[n] = button;
                           }else{
@@ -125,16 +119,34 @@
                 document.querySelector("table").setAttribute("class", "table table-striped");
              }
       }
+       Display.prototype = Validation.prototype; 
+         Display.prototype.updateForm = function(form){
+          var that = this;
+          this.getFormUpdateData(function(res){
+              if(res.id){
+                that.numOfitems = res.data[that.currentFormName].items.length;
+                that.appendBaseForms(res.data[that.currentFormName].items);
+                that.appendCLItem = that.numOfitems;
+                opdb.deleteRecord(res, function(msg){
+                     console.log(msg);
+                });
+              }
+              else{
+                 that.appendBaseForms().setAppendCLItem();    
+              }
+         });
+      }
       Display.prototype.setFormUpdateData = function(op, data, callback){
-                   opdb.deleteRecord(data, function(msg){
+          var that = this;
+                   this.deleteRecord(data, function(msg){
                        console.log(msg);
-                        opdb.dbOperation(op, data, function(msg){
+                        that.dbOperation(op, data, function(msg){
                         callback(msg);
                   });
               });
      }
-     Display.prototype.getFormUpdateData = function(form, callback){
-               opdb.readRecord(form , function(data){
+     Display.prototype.getFormUpdateData = function(callback){
+               this.readRecord(function(data){
                    callback(data);
                })
      }

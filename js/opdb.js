@@ -20,9 +20,13 @@ function InteractDB(){};
         return op;
     }
     InteractDB.prototype.getFinalData = function(res, input, op){
+        var temp = {};
         op = this.determineAction(res, op)
         if(op == "add" || op == "update"){
-            res[this.getCurrentFormName()] = input;
+            console.log(this.getCurrentFormUinqName());
+            temp[this.getCurrentFormUinqName()] = input;
+         res =   $.extend({}, res.data, temp);
+           // res = temp;
         }
         return {"data":{"id": this.getCurrentFormKeyId(), "data": res}, "action": op};
     }
