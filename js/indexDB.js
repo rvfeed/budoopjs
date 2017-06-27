@@ -90,7 +90,7 @@ function IndexDBModal(){
             };
     }
     
-    this.readAll = function(callback) {
+    this.readAll = function(callback, page) {
             var objectStore = db.transaction("budget").objectStore("budget");
        var temp = [];
        var count = 1;
@@ -98,11 +98,14 @@ function IndexDBModal(){
               var cursor = event.target.result;
              
               if (cursor) {
-                    console.log(cursor.value.data);
+                  if(cursor.key.indexOf(page) > -1){
+                       console.log(cursor.value.data);
                     for(var x in cursor.value.data){
                      count++;
                         temp.push({"res": cursor.value.data[x], "id": cursor.key});
                     }
+                  }
+                   
                     //alert("Name for id " + cursor.key + " is " + cursor.value.name + ", Age: " + cursor.value.age + ", Email: " + cursor.value.email);
                     if(count <= 10)
                         cursor.continue();

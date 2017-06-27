@@ -74,6 +74,8 @@
     <script type="text/javascript">
   var clist = new ChecklistItem();
   $(function () {
+        clist.tableData = ["name", "itemQty", "checkListDate", "DELETE", "UPDATE"];
+        clist.tableHead = ["Name", "Quantity", "Date", "", ""];
       indexDb.IntiateDb(function(){
           clist.setCurrentFormKeyId("checklist");
           clist.updateForm();

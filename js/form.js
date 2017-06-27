@@ -5,8 +5,9 @@ function BaseForm(m){
       this.dataFormat = {"items":[], "name": ""};
       this.currentFormName = "checklist";
       this.currentFormUinqName = "";
+      this.currentForm = "";
       this.appendCLItem = 0;
-      this.formElements = ["itemDate", "formName", "itemName", "itemQty", "itemQtyType"];
+      this.formInputTypes = ["text", "number", "select"];
       this.dataToBeSaved = {};
   }
   BaseForm.prototype = Display.prototype;
@@ -53,4 +54,23 @@ function BaseForm(m){
   }
   BaseForm.prototype.setCurrentFormUinqName = function(name){
       this.currentFormUinqName = name;
+  }
+  BaseForm.prototype.setCurrentForm = function(name){
+       this.currentForm =  name;
+  }
+   BaseForm.prototype.getCurrentForm = function(name){
+       return this.currentForm;
+  }
+  BaseForm.prototype.getInputKeyValue = function(form, types){
+      var eleArr = []; 
+      console.log(form.length)
+   for(var i = 0; i < form.length; i++){
+       var ele = {};
+             if(types.indexOf(form[i].type)  > -1){
+             ele.name = form[i].name;
+             ele.value = form[i].value;
+             eleArr.push(ele);
+         }
+     }
+     return eleArr;
   }

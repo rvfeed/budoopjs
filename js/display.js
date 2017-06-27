@@ -2,33 +2,19 @@
       function Display(tData, tHead){
             this.tableData = tData || ["itemName", "itemPrice", "itemDate"];
             this.tableHead = tHead || ["Name", "Price", "Date"];
-            var self = this;
             this.oldDate = false;
             this.enteredDate = new Date().getTime();
             this.action = "add";
-           this.getResultHead = function(){
-               return this.tableHead;
-           }
-           this.getResultBody = function(){
-               return this.tableData;
-           }
-           this.setResultBody = function(arr){
-               this.tableData = arr || this.tableData;
-               return this;
-           }
-           this.setResultHead = function(arr){
-               this.tableHead = arr || this.tableHead;
-               return this;
-           }
-           this.getProperty = function(prop){
-               return this[prop];
-           }
-          
-           var formAction = function(c, data, form){
-               BaseForm.prototype.setCurrentFormUinqName.call(self, "checklist");
-               //self.setCurrentFormUinqName("checklist");
+ 
+  
+      }
+       Display.prototype = Validation.prototype; 
+       Display.prototype.formAction = function(c, data){
+             var self = this;
+             var form = this.getCurrentForm();
+              // BaseForm.prototype.setCurrentFormUinqName.call(self, form);
                if(c == "update"){
-                    self.setCurrentFormKeyId(form);
+                    self.setCurrentFormKeyId(this.getCurrentForm());
                    data.id = form;
                    self.setFormUpdateData("add", data, function(msg){
                        window.location.href = form+".html";
@@ -39,28 +25,30 @@
                   self.dbOperation(c, data, function(msg){
                        self.showMessage(msg, "infoMsg");
                        opdb.readAllRecords(function(res) {
-                           disp.showData(res);
+                           self.showData(res);
                        });
                  }); 
                }
                 
            }
-      
-    
-      
-    this.setHTMLUpdateById = function(id, prop, value){
+  
+  Display.prototype.setHTMLUpdateById = function(id, prop, value){
        document.getElementById(id)[prop] = value;
    }
-   this.setHiddenProp = function(prop, value){
+   
+  Display.prototype.setHiddenProp = function(prop, value){
        this[prop] = value;
-   }
-   this.getHTMLValueById = function(id){
+       }
+   
+   Display.prototype.getHTMLValueById = function(id){
        return document.getElementById(id).value || false;
    }
-           this.showData = function(data, tbody, thead, page){
-               console.log("pppppppppppp")
-               var tbodyData = tbody;
-               var thHead = thead;
+   
+   
+   
+    Display.prototype.showData = function(data){
+               var tbodyData = this.tableData;
+               var thHead = this.tableHead;
                var table = document.createElement("table"),
                    thead = document.createElement("thead"),
                    tbody = document.createElement("tbody");
@@ -85,7 +73,25 @@
                         td[n] = document.createElement("td");
                         var dd = x[tbodyData[n]];
                         if(tbodyData[n] == "itemQty"){
-                            textnode[n] = document.createTextNode(x.items.length); 
+                            try{
+                                textnode[n] = document.createTextNode(x.items.length);     
+                            }
+                            catch(err){
+                                console.log("Old data present in the databse");
+                                textnode[n] = document.createTextNode(0);;
+                            }
+                        }else if(tbodyData[n] == "itemPrice"){
+                            var price = 0;
+                                try{
+                                 x.items.forEach(function(item){
+                                        price = price + parseInt(item.itemPrice);
+                                });    
+                            }
+                            catch(err){
+                                console.log("Old data present in the databse");
+                            }
+                         
+                             textnode[n] = document.createTextNode(price);
                         }else if(tbodyData[n] == "itemDate"){
                           dd = moment(new Date(x.items[tbodyData[n]])).format("MMM Do, YY");
                           textnode[n] = document.createTextNode(dd);
@@ -99,11 +105,11 @@
                                     button["innerHTML"] = '<span class="glyphicon glyphicon-pencil"></span>';
                                var input = x;
                                input.id = data[i].id;
-                              button["onclick"] = function(c, d, form){ 
+                              button["onclick"] = function(c, d){ 
                                   return function(){
-                                      formAction(c, d, form);
+                                      that.formAction(c, d);
                                   }
-                              }(tbodyData[n].toLowerCase(), input, page)
+                              }(tbodyData[n].toLowerCase(), input)
                               button.attributes["class"] = "btn";
                               textnode[n] = button;
                           }else{
@@ -118,13 +124,29 @@
                 document.getElementById("result").appendChild(table);
                 document.querySelector("table").setAttribute("class", "table table-striped");
              }
-      }
-       Display.prototype = Validation.prototype; 
+        Display.prototype.getResultHead = function(){
+               return this.tableHead;
+           }
+           Display.prototype.getResultBody = function(){
+               return this.tableData;
+           }
+           Display.prototype.setResultBody = function(arr){
+               this.tableData = arr || this.tableData;
+               return this;
+           }
+           Display.prototype.setResultHead = function(arr){
+               this.tableHead = arr || this.tableHead;
+               return this;
+           }
+           Display.prototype.getProperty = function(prop){
+               return this[prop];
+           }
          Display.prototype.updateForm = function(form){
           var that = this;
           this.getFormUpdateData(function(res){
               if(res.id){
                 that.numOfitems = res.data[that.currentFormName].items.length;
+                that.setHTMLUpdateById("itemDate", "value", res.data[that.currentFormName].checkListDate)
                 that.appendBaseForms(res.data[that.currentFormName].items);
                 that.appendCLItem = that.numOfitems;
                 opdb.deleteRecord(res, function(msg){

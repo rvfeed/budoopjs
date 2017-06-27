@@ -5,7 +5,8 @@ function ChecklistItem(m){
       this.qty = ["Pc", "gms", "kg"];
       this.dataFormat = {"items":[], "name": ""};
       this.currentFormName = "checklist";
-      this.currentFormUinqName = "";
+      this.currentForm = "checklist";
+      this.currentFormUinqName = "checklist";
       this.appendCLItem = 0;
       this.formElements = ["itemDate", "formName", "itemName", "itemQty", "itemQtyType"];
       this.dataToBeSaved = {};
@@ -15,7 +16,7 @@ function ChecklistItem(m){
   ChecklistItem.prototype.htmlItems = function(i, v){
       v = v || {itemName: "", itemQty: "", itemName: ""};
           var itemHtml = '<div class="col-sm-5"><input type="text" name="itemName'+i+'" value="'+v.itemName+'" id="itemName'+i+'" class="form-control" required/></div>'+
-                          '<div class="col-sm-1"><input type="text" name="itemQty'+i+'" value="'+v.itemQty+'" id="itemQty'+i+'" class="form-control"/></div>'+
+                          '<div class="col-sm-1"><input type="number" name="itemQty'+i+'" value="'+v.itemQty+'" id="itemQty'+i+'" class="form-control"/></div>'+
                           '<div class="col-sm-1"><select class="form-control" name="itemQtyType'+i+'" id="itemQtyType'+i+'">';
                            this.qty.forEach(function(q){
                                 if(v.itemQtyType == q)
@@ -38,8 +39,6 @@ function ChecklistItem(m){
   
 
   function saveCheckList(){
-       var arr = ["itemDate", "itemName", "itemQty", "itemQtyType"];
-    disp.setResultBody(arr);
     var date = disp.getHTMLValueById('itemDate').replaceAll("/", "");
     clist.setCurrentFormKeyId("checklist"+date.replaceAll("'", ""));
     clist.currentFormUinqName = disp.getHTMLValueById("checkListName").camelCase().replaceAll(" ", "");

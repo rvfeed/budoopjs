@@ -32,9 +32,11 @@ function InteractDB(){};
     }
       //used for readAll operations
      InteractDB.prototype.readAllRecords = function(cb){
-        indexDb.readAll( function(res){
-            cb(res);
-        });
+         var that = this;
+         console.log(that);
+        indexDb.readAll(function(res){
+               that.showData(res);
+        }, that.getCurrentForm());
     }
     //used foe read and readAll operations
      InteractDB.prototype.deleteRecord = function(input, cb){
@@ -52,6 +54,11 @@ function InteractDB(){};
            var result = that.getFinalData(res, input, operation);
             indexDb[result.action](result.data, function(msg){
                         done(msg);
+                        if(result.action == "delete"){
+                            that.readAllRecords(function(res){
+                                that.showData(res);
+                            });
+                        }
                    
             });
         });

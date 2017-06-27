@@ -76,12 +76,4 @@
                 return true;
             }
       
-        
-   function search(){
-        document.getElementById("result").innerHTML = "";
-         opdb.readRecord(disp.getHTMLValueById("search") , function(res){
-            disp.showData(res);
-        });
-       } 
-       
 var valid = new Validation();

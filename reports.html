@@ -40,17 +40,26 @@
    <script src="js/display.js"></script>     
     <script src="js/dataStorage.js"></script>   
     <script src="js/indexDB.js"></script>
-    <script src="js/checklist.js"></script>
+    <script src="js/form.js"></script>
     <script src="js/budget.js"></script>
    <script>
+           
+   function search(){
+       console.log((bgFrom.currentForm));
+        document.getElementById("result").innerHTML = "";
+         opdb.readRecord(disp.getHTMLValueById("search") , function(res){
+            disp.showData(res);
+        });
+       } 
+       
    $(function () {
-         
+         bgFrom.setCurrentForm("index");
+         bgFrom.tableData = ["checkListDate", "itemPrice", "DELETE", "UPDATE"];
+         bgFrom.tableHead = ["Date", "Price", "", ""];
         indexDb.IntiateDb(function(db){
            db.readAll(function(res){
-               var tableData = ["itemName", "itemPrice", "itemDate", "DELETE", "UPDATE"];
-                var tableHead = ["Name", "Price", "Date", "", ""];
-               disp.showData(res, tableData, tableHead);
-           });
+               bgFrom.showData(res);
+           }, bgFrom.getCurrentForm());
        });
     $('.datepicker').datepicker({ autoclose: true});
     $('div.datepicker tbody').on('click', function(){  $('div.datepicker').hide() });

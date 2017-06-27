@@ -19,8 +19,8 @@
     </div>
     <ul class="nav navbar-nav">
       <li><a href="index.html">Home</a></li>
-      <li class="active"><a href="reports.html">Reports</a></li>
-      <li><a href="checklist.html">Check List</a></li>
+      <li><a href="reports.html">Reports</a></li>
+      <li class="active"><a href="checklist.html">Check List</a></li>
     </ul>
   </div>
 </nav>
@@ -34,7 +34,7 @@
          <div class="hidden"  style="clear:both;" id="infoMsg"></div>
         <div id="result" style="clear:both;"></div>
         </div>
-              <script src="js/lib.js"></script>
+        <script src="js/lib.js"></script>
   <script src="js/opdb.js"></script>
      <script src="js/validation.js"></script>
    <script src="js/display.js"></script>     
@@ -44,16 +44,15 @@
     <script src="js/checklist.js"></script>
       
    <script>
+   var clist = new ChecklistItem();
    $(function () {
-         
+          clist.setCurrentForm("checklist");
+            clist.tableData = ["name", "itemQty", "checkListDate", "DELETE", "UPDATE"];
+                clist.tableHead = ["Name", "Quantity", "Date", "", ""];
         indexDb.IntiateDb(function(db){
            db.readAll(function(res){
-               console.log(res);
-              // return;
-               var tableData = ["name", "itemQty", "checkListDate", "DELETE", "UPDATE"];
-                var tableHead = ["Name", "Quantity", "Date", "", ""];
-               disp.showData(res, tableData, tableHead, "checklist");
-           });
+               clist.showData(res);
+           }, clist.getCurrentForm());
        });
     $('.datepicker').datepicker({ autoclose: true});
     $('div.datepicker tbody').on('click', function(){  $('div.datepicker').hide() });
