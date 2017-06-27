@@ -74,3 +74,8 @@ function BaseForm(m){
      }
      return eleArr;
   }
+function deleteAll(){
+    opdb.deleteAll(function(msg){
+       disp.showMessage(msg, "infoMsg") ;
+    });
+}

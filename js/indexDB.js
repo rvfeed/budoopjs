@@ -53,7 +53,20 @@ function IndexDBModal(){
             }
              
     }
-    
+     this.deleteAll = function(fn) {
+         var that = this;
+         var request = db.transaction(["budget"], "readwrite")
+             .objectStore("budget")
+             .clear();
+             request.onsuccess = function(event) {
+                    fn("All the data has been deleted from your database.");
+             }
+             request.onerror = function(event) {         
+                    fn("Unable to delete data from your database! ");       
+            }
+             
+    }
+  
     this.update = function(data, fn) {
          var that = this;
          var request = db.transaction(["budget"], "readwrite")

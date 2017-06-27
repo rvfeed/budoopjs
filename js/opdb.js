@@ -46,6 +46,13 @@ function InteractDB(){};
         });
     }
     
+    //used to clear the db
+     InteractDB.prototype.deleteAll = function(cb){
+        indexDb.deleteAll(function(res){
+            console.log(res);
+            cb(res);
+        });
+     }
     
     //used for add, update and delete operations
     InteractDB.prototype.dbOperation = function(operation, input, done){
