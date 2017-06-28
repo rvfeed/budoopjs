@@ -19,12 +19,12 @@
             return this.currentFormKeyId;
         }
     
-    Validation.prototype.formDataMulti = function(d){
-              var  date, items = [], tempData = {};
-              console.log(d);
-              for(var n = 0; n < this.numOfitems; n++){
+     Validation.prototype.formDataMulti = function(d){
+              var that = this, date, items = [], tempData = {};
+              this.setInputKeyValue(d);
+              this.allFormElementsNum.forEach(function(n){
                    var formDup = {};
-              this.formElements.forEach(function(e){
+              that.formElements.forEach(function(e){
                   if(e == "formName") return;
                    if(e == "itemDate"){
                         date = d[e].value;
@@ -37,7 +37,7 @@
               });
               formDup.enteredDate = new Date().getTime();
               items.push(formDup);
-             }
+             });
              this.dataToBeSaved.items = items;
              this.dataToBeSaved.name = this.currentFormName;
              this.dataToBeSaved.checkListDate = date;
@@ -55,7 +55,6 @@
               formDup.id = this.getCurrentFormKeyId();
               this.dataToBeSaved = arr.push(formDup);
         }
-   
     Validation.prototype.formValidation = function(d){
                 var that = this;
                 var form = this.formElements;
@@ -75,5 +74,6 @@
                 }    
                 return true;
             }
+         
       
 var valid = new Validation();

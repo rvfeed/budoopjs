@@ -34,11 +34,15 @@
               <input type="text" id="itemDate" name="itemDate" class="form-control datepicker" required>
           </div>
          <div id="checklistArea" class="col-sm-12">
-            <div class="col-sm-5"><label>Item</label></div>
-            <div class="col-sm-2"><label>Price</label></div>
-            <div class="col-sm-5"></div>
-          </div>  
-        <div id="checklistList"> </div>
+                          <table cellpadding="5" cellspacing="5">
+                   <thead> <tr>
+               <th width="40%">Item </th>
+               <th width="20%">Quantity</th>
+               <th width="20">Type</th>
+               <th width="10%"></th>
+           </tr></thead>
+           <tbody id="checklistList"></tbody>
+       </table>
         <div class="col-sm-12 mbottom-10">
             <a href="javascript:void(0)" onclick="budgetAddCheckItem()"><span class="glyphicon glyphicon-plus"></span></a>
         </div>

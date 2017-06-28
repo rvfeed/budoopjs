@@ -24,10 +24,18 @@ function InteractDB(){};
         op = this.determineAction(res, op)
         if(op == "add" || op == "update"){
             console.log(this.getCurrentFormUinqName());
+            if(this.previousFormName && this.previousFormName != this.getCurrentFormUinqName()){
+                delete res.data[this.previousFormName];
+            }
             temp[this.getCurrentFormUinqName()] = input;
          res =   $.extend({}, res.data, temp);
            // res = temp;
-        }
+        }else if(op == "delete"){
+                console.log(res.data[input.uName]);
+                delete res.data[input.uName];
+                if( Object.keys(res.data).length > 0) op = "update"
+                res = res.data;
+            }
         return {"data":{"id": this.getCurrentFormKeyId(), "data": res}, "action": op};
     }
       //used for readAll operations
@@ -61,7 +69,7 @@ function InteractDB(){};
            var result = that.getFinalData(res, input, operation);
             indexDb[result.action](result.data, function(msg){
                         done(msg);
-                        if(result.action == "delete"){
+                        if(operation == "delete"){
                             that.readAllRecords(function(res){
                                 that.showData(res);
                             });

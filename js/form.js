@@ -7,10 +7,14 @@ function BaseForm(m){
       this.currentFormUinqName = "";
       this.currentForm = "";
       this.appendCLItem = 0;
-      this.formInputTypes = ["text", "number", "select"];
+      this.allFormElements = [];
+      this.allFormElementsNum = [];
       this.dataToBeSaved = {};
   }
   BaseForm.prototype = Display.prototype;
+  
+  BaseForm.prototype.formInputTypes = ["text", "number", "select"];
+  BaseForm.prototype.previousFormName = false;
      BaseForm.prototype.setAppendCLItem = function(){
           this.appendCLItem++;
           return this;
@@ -22,27 +26,21 @@ function BaseForm(m){
           this.numOfitems++;
           return this;
       }
-      BaseForm.prototype.removeItem = function(num){
-          this.numOfitems--;
-          this.appendCLItem--;
-          return this;
+      BaseForm.prototype.removeItem = function(cls){
+          var elements = document.getElementsByClassName(this.currentForm+""+cls);
+          while (elements.length > 0) elements[0].remove();
       }
       BaseForm.prototype.getNumOfItems = function(){
           return this.numOfitems;
       }
   
-      BaseForm.prototype.appendBaseForms = function(items){
-          items = items || [];
-          document.getElementById("checklistArea").setAttribute("style", "display: block;");
-         // var classSize = disp.getElementSizeByClassName("checkbox");
-          for(var n = this.appendCLItem; n < this.numOfitems; n++){
-          var div = document.createElement("div");
-              div["className"] = "form-group col-sm-12 checklist";
-              div["innerHTML"] = this.htmlItems(n, items[n]);
+      BaseForm.prototype.appendBaseForms = function(i, item){
+          item = item || {};
+          i = i || this.numOfitems;
+          var div = document.createElement("tr");
+              div["className"] = "form-group mybudget "+this.currentForm+""+i;
+              div["innerHTML"] = this.htmlItems(i, item);
               document.getElementById("checklistList").appendChild(div);
-          //disp.setHTMLUpdateById("checklistList", "appendChild", div);
-          //    +'<div class="col-sm-1"><input type="checkbox" name="isSelected'+i+'" id="isSelected'+i+'" class="form-control"/></div>'
-          }
           return this;
       
       }
@@ -61,19 +59,38 @@ function BaseForm(m){
    BaseForm.prototype.getCurrentForm = function(name){
        return this.currentForm;
   }
-  BaseForm.prototype.getInputKeyValue = function(form, types){
-      var eleArr = []; 
-      console.log(form.length)
-   for(var i = 0; i < form.length; i++){
-       var ele = {};
-             if(types.indexOf(form[i].type)  > -1){
-             ele.name = form[i].name;
-             ele.value = form[i].value;
-             eleArr.push(ele);
-         }
-     }
-     return eleArr;
+  
+   BaseForm.prototype.setformInputTypes = function(name){
+       this.formInputTypes =  name;
   }
+   BaseForm.prototype.getformInputTypes = function(){
+       return this.formInputTypes;
+  }
+   BaseForm.prototype.getAllFormElements = function(){
+       return this.allFormElements;
+  }
+   BaseForm.prototype.setAllFormElements = function(element){
+       if(this.allFormElements.indexOf(element) === -1)
+            this.allFormElements.push(element);
+  }
+    BaseForm.prototype.setAllFormElementsNum = function(element){
+       if(this.allFormElementsNum.indexOf(element) === -1)
+            this.allFormElementsNum.push(element);
+  }
+  BaseForm.prototype.setInputKeyValue = function(form){
+      for(var i = 0; i < form.length; i++){
+             if(this.getformInputTypes().indexOf(form[i].type)  > -1){
+                this.setAllFormElements(form[i].name);
+                console.log(form[i]);
+                var temp = form[i].name.replaceAll("[a-z]", "");
+                console.log(form[i].name);
+                if(temp !== "")
+                    this.setAllFormElementsNum(temp);
+             }
+      }
+    return this.setAllFormElements;
+  }
+  
 function deleteAll(){
     opdb.deleteAll(function(msg){
        disp.showMessage(msg, "infoMsg") ;

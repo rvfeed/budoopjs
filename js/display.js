@@ -68,6 +68,7 @@
                 for(var i in data){
                     var tr = document.createElement("tr");
                      var x= data[i].res;
+                     var uName =  data[i].uname;
                      
                      for(var n in tbodyData){
                         td[n] = document.createElement("td");
@@ -105,6 +106,7 @@
                                     button["innerHTML"] = '<span class="glyphicon glyphicon-pencil"></span>';
                                var input = x;
                                input.id = data[i].id;
+                               input.uName = uName;
                               button["onclick"] = function(c, d){ 
                                   return function(){
                                       that.formAction(c, d);
@@ -146,15 +148,20 @@
           this.getFormUpdateData(function(res){
               if(res.id){
                 that.numOfitems = res.data[that.currentFormName].items.length;
-                that.setHTMLUpdateById("itemDate", "value", res.data[that.currentFormName].checkListDate)
-                that.appendBaseForms(res.data[that.currentFormName].items);
+                that.setHTMLUpdateById("itemDate", "value", res.data[that.currentFormName].checkListDate);
+                if(that.currentFormName !== "index")
+                    that.setHTMLUpdateById("checkListName", "value", res.data[that.currentFormName].name);
+                that.previousFormName = res.data[that.currentFormName].uName;;
+                res.data[that.currentFormName].items.forEach(function(item, i){
+                    that.appendBaseForms(i, item);
+                });
                 that.appendCLItem = that.numOfitems;
                 opdb.deleteRecord(res, function(msg){
                      console.log(msg);
                 });
               }
               else{
-                 that.appendBaseForms().setAppendCLItem();    
+                 that.appendBaseForms();    
               }
          });
       }

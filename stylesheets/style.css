@@ -11,4 +11,7 @@ input[type=checkbox]{
 }
 .mtop-5 { margin-top:5px; }
 .mbottom-10 { margin-bottom: 10px; }
-
+#checklistList input,
+#checklistList select{
+   width: 95%; 
+}

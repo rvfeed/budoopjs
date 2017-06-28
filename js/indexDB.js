@@ -115,7 +115,7 @@ function IndexDBModal(){
                        console.log(cursor.value.data);
                     for(var x in cursor.value.data){
                      count++;
-                        temp.push({"res": cursor.value.data[x], "id": cursor.key});
+                        temp.push({"res": cursor.value.data[x], "id": cursor.key, "uname": x});
                     }
                   }
                    

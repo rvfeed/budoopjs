@@ -6,10 +6,16 @@ String.prototype.getNumber = function(){
         }
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
-    return target.replace(new RegExp(search, 'g'), replacement);
+    return target.replace(new RegExp(search, 'gi'), replacement);
  };
 String.prototype.camelCase = function(){
     return this.split(" ").map(function(w){
         return w.charAt(0).toUpperCase()+w.substr(1, w.lenth);
     }).join(" ");
+}
+
+function deleteAll(){
+    opdb.deleteAll(function(msg){
+       disp.showMessage(msg) ;
+    });
 }
