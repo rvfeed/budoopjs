@@ -21,8 +21,8 @@ function ChecklistItem(m){
           v = {itemName: "", itemQty: "", itemName: ""};
       }
           var itemHtml = '<td width="40%"><input type="text" name="itemName'+i+'" value="'+v.itemName+'" id="itemName'+i+'" class="form-control" required/></td>'+
-                          '<td width="20%"><input type="number" name="itemQty'+i+'" value="'+v.itemQty+'" id="itemQty'+i+'" class="form-control"/></td>'+
-                          '<td width="20%"><select class="form-control" name="itemQtyType'+i+'" id="itemQtyType'+i+'">';
+                          '<td width="25%"><input type="number" name="itemQty'+i+'" value="'+v.itemQty+'" id="itemQty'+i+'" class="form-control"/></td>'+
+                          '<td width="25%"><select class="form-control" name="itemQtyType'+i+'" id="itemQtyType'+i+'">';
                            this.qty.forEach(function(q){
                                 if(v.itemQtyType == q)
                                     itemHtml = itemHtml+'<option selected="selected">'+q+'</option>';

@@ -10,7 +10,7 @@
     </head>
     <body>
         <div class="container">
-           <div class="row" >
+           <div class="row">
        <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -23,8 +23,11 @@
     </ul>
   </div>
 </nav>
+</div>
  <form name="checklist" id="checklist" style="clear: both">
-     <div><a href="allchecklist.html">view All</a></div>
+     <div class="form-group col-sm-7">
+         <a href="allchecklist.html">view All</a>
+         </div>
     
        
          <div class="hidden" id="infoMsg"></div>
@@ -46,8 +49,8 @@
                <table cellpadding="5" cellspacing="5">
                    <thead> <tr>
                <th width="40%">Item </th>
-               <th width="20%">Quantity</th>
-               <th width="20">Type</th>
+               <th width="25%">Qty</th>
+               <th width="25">Type</th>
                <th width="10%"></th>
            </tr></thead>
            <tbody id="checklistList"></tbody>
@@ -56,10 +59,12 @@
             
           
         
-        <div class="col-sm-12 mbottom-10">
-            <a href="javascript:void(0)" onclick="addCheckItem()"><span class="glyphicon glyphicon-plus"></span></a>
+        <div class="col-sm-12 mbottom-10" style="float:right;">
+            <a href="javascript:void(0)" onclick="addCheckItem()">
+                <!--<span class="glyphicon glyphicon-plus"></span>-->
+                 add item</a>
         </div>
-       <div class="col-sm-12">
+       <div class="col-sm-12" style="clear:both;">
            <input  type="button" class="btn btn-primary" value="Save" onclick="saveCheckList()"/>
             <input type="reset" class="btn btn-primary" value="Clear"/>
         </div>
@@ -67,9 +72,6 @@
       </div>
          
     </form> 
-  </div>
-     
-      
 </div>
    <script src="js/lib.js"></script>
   <script src="js/opdb.js"></script>
