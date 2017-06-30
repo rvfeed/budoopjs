@@ -44,9 +44,60 @@
        return document.getElementById(id).value || false;
    }
    
+   Display.prototype.getNodeData = function(datai, tbdy){
+       var that = this;
+       var tbd;
+       var x = datai.res;
+       var uName =  datai.uname;
+       var nodeData = x[tbdy];
+       if(tbdy == "itemQty"){
+                            try{
+                                tbd = document.createTextNode(x.items.length);     
+                            }
+                            catch(err){
+                                console.log("Old data present in the databse");
+                                tbd = document.createTextNode(0);
+                            }
+                        }else if(tbdy == "itemPrice"){
+                            var price = 0;
+                                try{
+                                 x.items.forEach(function(item){
+                                        price = price + parseInt(item.itemPrice);
+                                });    
+                            }
+                            catch(err){
+                                console.log("Old data present in the databse");
+                            }
+                         
+                             tbd = document.createTextNode(price);
+                        }else if(tbdy == "itemDate"){
+                          nodeData = moment(new Date(x.items[tbd])).format("MMM Do, YY");
+                          tbd = document.createTextNode(nodeData);
+                          }else if(tbdy == "DELETE" || tbdy == "UPDATE") {
+                              var button = document.createElement("a");
+                               button["className"] = "btn";
+                               button["href"] = "javascript:void(0)";
+                                if(tbdy == "DELETE")
+                                    button["innerHTML"] = '<span class="glyphicon glyphicon-trash"></span>';
+                                else
+                                    button["innerHTML"] = '<span class="glyphicon glyphicon-pencil"></span>';
+                               var input = x;
+                               input.id = datai.id;
+                               input.uName = uName;
+                              button["onclick"] = function(c, d){ 
+                                  return function(){
+                                      that.formAction(c, d);
+                                  }
+                              }(tbdy.toLowerCase(), input)
+                              button.attributes["class"] = "btn";
+                              tbd = button;
+                          }else{
+                              tbd = document.createTextNode(nodeData);
+                          }
+                          return tbd;
+   }
    
-   
-    Display.prototype.showData = function(data){
+    Display.prototype.showData = function(data, details){
                var tbodyData = this.tableData;
                var thHead = this.tableHead;
                var table = document.createElement("table"),
@@ -67,56 +118,45 @@
                 var td = {}, textnode = {}; 
                 for(var i in data){
                     var tr = document.createElement("tr");
-                     var x= data[i].res;
-                     var uName =  data[i].uname;
-                     
+                    tr["onclick"] = function(i){
+                                        return function () {
+                                        if(that.currentForm == "checklist"){
+                                            that.tableHead = ["Date", "Name", "Qty", ""];
+                                            that.tableData = ["itemDate", "itemName", "itemQty", "check"];
+                                        }
+                                        else{
+                                            that.tableHead = ["Date", "Name", "Price"];
+                                            that.tableData = ["itemDate", "itemName", "itemPrice"];
+                                        }
+                                        if(data[i].res)
+                                            that.showData(data[i].res.items);
+                                        }
+                                    }(i);
                      for(var n in tbodyData){
                         td[n] = document.createElement("td");
-                        var dd = x[tbodyData[n]];
-                        if(tbodyData[n] == "itemQty"){
-                            try{
-                                textnode[n] = document.createTextNode(x.items.length);     
-                            }
-                            catch(err){
-                                console.log("Old data present in the databse");
-                                textnode[n] = document.createTextNode(0);;
-                            }
-                        }else if(tbodyData[n] == "itemPrice"){
-                            var price = 0;
-                                try{
-                                 x.items.forEach(function(item){
-                                        price = price + parseInt(item.itemPrice);
-                                });    
-                            }
-                            catch(err){
-                                console.log("Old data present in the databse");
-                            }
-                         
-                             textnode[n] = document.createTextNode(price);
-                        }else if(tbodyData[n] == "itemDate"){
-                          dd = moment(new Date(x.items[tbodyData[n]])).format("MMM Do, YY");
-                          textnode[n] = document.createTextNode(dd);
-                          }else if(tbodyData[n] == "DELETE" || tbodyData[n] == "UPDATE") {
-                              var button = document.createElement("a");
-                               button["className"] = "btn";
-                               button["href"] = "javascript:void(0)";
-                                if(tbodyData[n] == "DELETE")
-                                    button["innerHTML"] = '<span class="glyphicon glyphicon-trash"></span>';
-                                else
-                                    button["innerHTML"] = '<span class="glyphicon glyphicon-pencil"></span>';
-                               var input = x;
-                               input.id = data[i].id;
+                        if(!data[i].res){
+                            if(tbodyData[n] == "check"){
+                                var checkbox = document.createElement("input");
+                               checkbox["type"] = "checkbox";
+                               checkbox["onclick"] = function(){ alert(this.value); };
+                              /* var input = x;
+                               input.id = datai.id;
                                input.uName = uName;
                               button["onclick"] = function(c, d){ 
                                   return function(){
                                       that.formAction(c, d);
                                   }
-                              }(tbodyData[n].toLowerCase(), input)
-                              button.attributes["class"] = "btn";
-                              textnode[n] = button;
-                          }else{
-                              textnode[n] = document.createTextNode(dd);
-                          }
+                              }(tbdy.toLowerCase(), input)*/
+                             //
+                             checkbox["className"] = "form-control";
+                              textnode[n] = checkbox;
+                              console.log(checkbox)
+                            }else
+                                textnode[n] = document.createTextNode(data[i][tbodyData[n]]);
+                        }
+                            
+                        else
+                            textnode[n] = this.getNodeData(data[i], tbodyData[n]);
                         td[n].appendChild(textnode[n]);
                         tr.appendChild(td[n]); 
                      }
