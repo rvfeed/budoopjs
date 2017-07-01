@@ -7,6 +7,22 @@ function InteractDB(){};
     InteractDB.prototype.isSameDate = function(oldDate, newDate){
         return oldDate === newDate;
     }
+    
+    InteractDB.prototype.updateRecord = function(uid, updateKey, updateVal, uname, eDate, done){
+        var that = this;
+        indexDb.read(uid, function(res){
+            var index = that.findItemIndex("enteredDate", eDate, res.data[uname].items);
+            console.log(index);
+            if(index !== -1){
+                res.data[uname].items[index].purchased = updateVal;
+            }
+            indexDb.update(res, function(msg){
+                disp.showMessage(msg, "infoMsg");
+                done(true);
+            })
+            
+        });
+    }
     //used foe read and readAll operations
      InteractDB.prototype.readRecord = function(cb){
         indexDb.read(this.getCurrentFormKeyId(), function(res){

@@ -15,6 +15,7 @@ function BaseForm(m){
   
   BaseForm.prototype.formInputTypes = ["text", "number", "select"];
   BaseForm.prototype.previousFormName = false;
+  BaseForm.prototype.dynamicTableName = false;
      BaseForm.prototype.setAppendCLItem = function(){
           this.appendCLItem++;
           return this;
@@ -27,8 +28,10 @@ function BaseForm(m){
           return this;
       }
       BaseForm.prototype.removeItem = function(cls){
-          var elements = document.getElementsByClassName(this.currentForm+""+cls);
-          while (elements.length > 0) elements[0].remove();
+          var s = document.getElementsByClassName(cls)[0].style;
+          s.opacity = 1;
+        (function fade(){(s.opacity-=.2)<0?s.display="none":setTimeout(fade,40)})();
+       /*   while (elements.length > 0) elements[0].remove();*/
       }
       BaseForm.prototype.getNumOfItems = function(){
           return this.numOfitems;
@@ -93,6 +96,6 @@ function BaseForm(m){
   
 function deleteAll(){
     opdb.deleteAll(function(msg){
-       disp.showMessage(msg, "infoMsg") ;
+       disp.showMessage(msg) ;
     });
 }

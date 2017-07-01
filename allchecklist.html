@@ -29,6 +29,7 @@
             <div class="form-group col-sm-7">
          <a href="allchecklist.html">View All</a>
          </div>
+         
           <input type="text" id="search" style="width:70%; margin-right:10px; float: left;" name="search" class="form-control datepicker" required/>
         <button style="float: left;" class="btn btn-primary" onclick="search()" value="Search" >Search</button>
           
@@ -49,8 +50,8 @@
    var clist = new ChecklistItem();
    $(function () {
           clist.setCurrentForm("checklist");
-            clist.tableData = ["name", "itemQty", "checkListDate", "DELETE", "UPDATE"];
-                clist.tableHead = ["Name", "Items", "Date", "", ""];
+            clist.tableData = ["name", "itemQty", "checkListDate", "TASKS", "DELETE", "UPDATE"];
+                clist.tableHead = ["Name", "Items", "Date", "", "", ""];
         indexDb.IntiateDb(function(db){
            db.readAll(function(res){
                clist.showData(res);

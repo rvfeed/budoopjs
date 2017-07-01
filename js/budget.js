@@ -20,7 +20,7 @@ function BudgetForm(m){
       }
           var itemHtml = '<td width="60%"><input type="text" name="itemName'+i+'" value="'+v.itemName+'" id="itemName'+i+'" class="form-control" required/></td>'+
                           '<td width="40%"><input type="number" name="itemPrice'+i+'" value="'+v.itemPrice+'" id="itemPrice'+i+'" class="form-control"/></td>'+
-                         '<td width="10%" style="padding: 15px"><span class="glyphicon glyphicon-trash" onclick="bgFrom.removeItem('+i+')"></span></td>';
+                         '<td width="10%" style="padding: 15px"><span class="glyphicon glyphicon-trash" onclick="budgetRemoveChildItem('+i+')"></span></td>';
             return itemHtml;
         }
   function budgetAddCheckItem(){
@@ -28,7 +28,7 @@ function BudgetForm(m){
   }
   
   function budgetRemoveChildItem(num){
-      bgFrom.removeItem(num);
+      bgFrom.removeItem(bgFrom.currentForm+""+num);
   }
   
 

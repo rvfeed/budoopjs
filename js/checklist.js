@@ -10,7 +10,6 @@ function ChecklistItem(m){
       this.allFormElements = [];
       this.allFormElementsNum = [];
       this.appendCLItem = 0;
-      
       this.formElements = ["itemDate", "formName", "itemName", "itemQty", "itemQtyType"];
       this.dataToBeSaved = {};
   }
@@ -30,7 +29,7 @@ function ChecklistItem(m){
                                      itemHtml = itemHtml+'<option>'+q+'</option>';
                             });
                           itemHtml =  itemHtml+'</select></td>'+
-                         '<td width="10%" style="padding: 15px"><span class="glyphicon glyphicon-trash" onclick="clist.removeItem('+i+')"></span></td>';
+                         '<td width="10%" style="padding: 15px"><span class="glyphicon glyphicon-trash" onclick="removeChildItem('+i+')"></span></td>';
             return itemHtml;
         }
   function addCheckItem(){
@@ -38,8 +37,7 @@ function ChecklistItem(m){
   }
   
   function removeChildItem(num){
-      clist.removeItem();
-      disp.removedChild("checklistList", num);
+      clist.removeItem(clist.currentForm+""+num);
   }
   
 
@@ -50,7 +48,7 @@ function ChecklistItem(m){
     clist.currentFormName = disp.getHTMLValueById("checkListName").camelCase();
         clist.formDataMulti(document.checklist);
         clist.dbOperation(disp.action, clist.dataToBeSaved, function(msg){
-                 disp.showMessage(msg, "infoMsg");
+                 disp.showMessage(msg);
         }); 
   }
  

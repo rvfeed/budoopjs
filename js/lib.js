@@ -13,7 +13,9 @@ String.prototype.camelCase = function(){
         return w.charAt(0).toUpperCase()+w.substr(1, w.lenth);
     }).join(" ");
 }
-
+function isEmpty(obj) {
+    return Object.keys(obj).length === 0;
+}
 function deleteAll(){
     opdb.deleteAll(function(msg){
        disp.showMessage(msg) ;

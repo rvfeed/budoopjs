@@ -20,6 +20,9 @@
                        window.location.href = form+".html";
                    });
                    return;
+                   }else if(c == "tasks"){
+                       
+                   
                }else{
                    self.setCurrentFormKeyId(data.id);
                   self.dbOperation(c, data, function(msg){
@@ -73,13 +76,15 @@
                         }else if(tbdy == "itemDate"){
                           nodeData = moment(new Date(x.items[tbd])).format("MMM Do, YY");
                           tbd = document.createTextNode(nodeData);
-                          }else if(tbdy == "DELETE" || tbdy == "UPDATE") {
+                          }else if(tbdy == "DELETE" || tbdy == "UPDATE" || tbdy == "TASKS") {
                               var button = document.createElement("a");
                                button["className"] = "btn";
                                button["href"] = "javascript:void(0)";
                                 if(tbdy == "DELETE")
                                     button["innerHTML"] = '<span class="glyphicon glyphicon-trash"></span>';
-                                else
+                                else if(tbdy == "TASKS")
+                                    button["innerHTML"] = '<span class="glyphicon glyphicon-tasks"></span>';
+                                else if(tbdy == "UPDATE")
                                     button["innerHTML"] = '<span class="glyphicon glyphicon-pencil"></span>';
                                var input = x;
                                input.id = datai.id;
@@ -96,8 +101,27 @@
                           }
                           return tbd;
    }
+   Display.prototype.checkTheList = function(val, uid, uname, eDate, done){
+         this.updateRecord(uid, "purchased", val, uname, eDate, function(flag){
+             done(flag);
+         }); 
+   }
+    Display.prototype.checkListOpen = function(datai){
+                                        if(this.currentForm == "checklist"){
+                                            this.dynamicTableName = "checkListItems";
+                                            this.tableHead = ["Date", "Name", "Qty", ""];
+                                            this.tableData = ["itemDate", "itemName", "itemQty", "check"];
+                                        }
+                                        else{
+                                            this.dynamicTableName = "budgetItems";
+                                            this.tableHead = ["Date", "Name", "Price"];
+                                            this.tableData = ["itemDate", "itemName", "itemPrice"];
+                                        }
+                                        if(datai.res)
+                                            this.showData(datai.res.items, datai.uname, datai.id);
+     }
    
-    Display.prototype.showData = function(data, details){
+    Display.prototype.showData = function(data, uname, uid){
                var tbodyData = this.tableData;
                var thHead = this.tableHead;
                var table = document.createElement("table"),
@@ -118,36 +142,25 @@
                 var td = {}, textnode = {}; 
                 for(var i in data){
                     var tr = document.createElement("tr");
-                    tr["onclick"] = function(i){
-                                        return function () {
-                                        if(that.currentForm == "checklist"){
-                                            that.tableHead = ["Date", "Name", "Qty", ""];
-                                            that.tableData = ["itemDate", "itemName", "itemQty", "check"];
-                                        }
-                                        else{
-                                            that.tableHead = ["Date", "Name", "Price"];
-                                            that.tableData = ["itemDate", "itemName", "itemPrice"];
-                                        }
-                                        if(data[i].res)
-                                            that.showData(data[i].res.items);
-                                        }
-                                    }(i);
+                    if(that.dynamicTableName)
+                        tr["className"] = that.dynamicTableName+""+i;
+                    tr["onclick"] = this.checkListOpen.bind(this,data[i]);
                      for(var n in tbodyData){
                         td[n] = document.createElement("td");
                         if(!data[i].res){
                             if(tbodyData[n] == "check"){
                                 var checkbox = document.createElement("input");
                                checkbox["type"] = "checkbox";
-                               checkbox["onclick"] = function(){ alert(this.value); };
-                              /* var input = x;
-                               input.id = datai.id;
-                               input.uName = uName;
-                              button["onclick"] = function(c, d){ 
-                                  return function(){
-                                      that.formAction(c, d);
-                                  }
-                              }(tbdy.toLowerCase(), input)*/
-                             //
+                               checkbox["value"] = data[i]["enteredDate"];
+                               if(data[i]["purchased"]) checkbox["checked"] = true;
+                               checkbox["onclick"] = function(t, i, uname, uid){ 
+                                 return function(){
+                                     var checked = this.checked;
+                                     t.updateRecord(uid, "purchased", this.checked, uname, this.value, function(flag){
+                                         if(flag && checked) that.removeItem(that.dynamicTableName+""+i);
+                                     });
+                                 } 
+                               }(this, i, uname, uid);
                              checkbox["className"] = "form-control";
                               textnode[n] = checkbox;
                               console.log(checkbox)
@@ -229,6 +242,7 @@
    }
      
      Display.prototype.showMessage = function(msg, id){
+         id = id || "infoMsg";
               var className = "alert alert-warning";
               if(msg.indexOf("unable") === -1)  className = "alert alert-success";
               this.setHTMLUpdateById(id,"className", className);
