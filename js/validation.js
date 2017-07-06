@@ -24,18 +24,19 @@
               this.setInputKeyValue(d);
               this.allFormElementsNum.forEach(function(n){
                    var formDup = {};
-              that.formElements.forEach(function(e){
+              that.formElements.forEach(function(e, i){
                   if(e == "formName") return;
                    if(e == "itemDate"){
                         date = d[e].value;
                         formDup[e] = d[e].value
+                        formDup.enteredDate = new Date().getTime()+"-"+n;
                     }else{
                         var f = e+""+n;
                         console.log(f+"----"+d[f].value);
                         formDup[e] = d[f].value
                     }
               });
-              formDup.enteredDate = new Date().getTime();
+              //formDup.enteredDate = new Date().getTime();
               items.push(formDup);
              });
              this.dataToBeSaved.items = items;

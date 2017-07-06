@@ -9,7 +9,7 @@
   
       }
        Display.prototype = Validation.prototype; 
-       Display.prototype.formAction = function(c, data){
+       Display.prototype.formAction = function(c, data, datai){
              var self = this;
              var form = this.getCurrentForm();
               // BaseForm.prototype.setCurrentFormUinqName.call(self, form);
@@ -21,8 +21,7 @@
                    });
                    return;
                    }else if(c == "tasks"){
-                       
-                   
+                       this.checkListOpen(datai, true);                   
                }else{
                    self.setCurrentFormKeyId(data.id);
                   self.dbOperation(c, data, function(msg){
@@ -73,9 +72,13 @@
                             }
                          
                              tbd = document.createTextNode(price);
-                        }else if(tbdy == "itemDate"){
-                          nodeData = moment(new Date(x.items[tbd])).format("MMM Do, YY");
-                          tbd = document.createTextNode(nodeData);
+                        }else if(tbdy == "itemDate" || tbdy == "checkListDate"){
+                          nodeData = moment(new Date(nodeData)).format("MMM Do, YY");
+                          var anchor = document.createElement("a");
+                          anchor["href"] = "javascript:void(0)";
+                          anchor["onclick"] = this.checkListOpen.bind(this,datai, false);
+                          anchor["innerHTML"] = nodeData;
+                          tbd = anchor;
                           }else if(tbdy == "DELETE" || tbdy == "UPDATE" || tbdy == "TASKS") {
                               var button = document.createElement("a");
                                button["className"] = "btn";
@@ -91,7 +94,7 @@
                                input.uName = uName;
                               button["onclick"] = function(c, d){ 
                                   return function(){
-                                      that.formAction(c, d);
+                                      that.formAction(c, d, datai);
                                   }
                               }(tbdy.toLowerCase(), input)
                               button.attributes["class"] = "btn";
@@ -106,11 +109,15 @@
              done(flag);
          }); 
    }
-    Display.prototype.checkListOpen = function(datai){
+    Display.prototype.checkListOpen = function(datai, isCheck){
                                         if(this.currentForm == "checklist"){
-                                            this.dynamicTableName = "checkListItems";
-                                            this.tableHead = ["Date", "Name", "Qty", ""];
-                                            this.tableData = ["itemDate", "itemName", "itemQty", "check"];
+                                             this.tableHead = ["Date", "Name", "Qty"];
+                                            this.tableData = ["itemDate", "itemName", "itemQty"];
+                                            if(isCheck){
+                                                this.dynamicTableName = "checkListItems";
+                                                this.tableHead.push("");
+                                                this.tableData.push("check");
+                                            }
                                         }
                                         else{
                                             this.dynamicTableName = "budgetItems";
@@ -120,7 +127,14 @@
                                         if(datai.res)
                                             this.showData(datai.res.items, datai.uname, datai.id);
      }
-   
+   function disableEventPropagation(e){
+       if(e.stopPropagation){
+           e.stopPropagation();           
+       }
+       else if(window.event){
+            window.event.cancelBubble =  true;
+       }
+   }
     Display.prototype.showData = function(data, uname, uid){
                var tbodyData = this.tableData;
                var thHead = this.tableHead;
@@ -144,7 +158,7 @@
                     var tr = document.createElement("tr");
                     if(that.dynamicTableName)
                         tr["className"] = that.dynamicTableName+""+i;
-                    tr["onclick"] = this.checkListOpen.bind(this,data[i]);
+                    
                      for(var n in tbodyData){
                         td[n] = document.createElement("td");
                         if(!data[i].res){
