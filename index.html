@@ -1,1 +1,71 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Ang5pra</title><base href="/"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/x-icon" href="favicon.ico"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"><link href="styles.0744b9f6769c326ccd7f.bundle.css" rel="stylesheet"/></head><body><app-root></app-root><script type="text/javascript" src="inline.318b50c57b4eba3d437b.bundle.js"></script><script type="text/javascript" src="polyfills.515ed9df1f4876ab6cb6.bundle.js"></script><script type="text/javascript" src="main.00bdd1d46554c61f5895.bundle.js"></script></body></html>
+<!doctype html>
+<head>
+    <title>Instagram Download</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    </head>
+    <body>
+    <div class="container">
+        <div class="row">
+        <div class="col-sm-6">
+            <form name="myForm">
+            <div class="form-group">
+                <input type="text" placeholder="Paste URL here" name="instaUrl" id="instaUrl" class="form-control" />
+            </div>
+            <div class="col-sm-2">
+                <div class="form-group">
+            <input type="button" value="Download Images" name="dImages" id="dImages" onclick="getImages()" class="btn btn-primary" />
+                </div>
+            </div>
+                </form>
+            </div>
+        </div>
+        </div>
+        <script>
+        function forceDownload(url, fileName){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.responseType = "blob";
+    xhr.onload = function(){
+        var urlCreator = window.URL || window.webkitURL;
+        var imageUrl = urlCreator.createObjectURL(this.response);
+        var tag = document.createElement('a');
+        tag.href = imageUrl;
+        tag.download = fileName;
+        document.body.appendChild(tag);
+        tag.click();
+        document.body.removeChild(tag);
+    }
+    xhr.send();
+}
+            window.addEventListener("copy", function(){ console.log("copied");});
+            function getImages(){
+                let url = document.forms[0].instaUrl.value;
+                console.log(url);
+                fetch(url).then((d) => d.text()).then( data => { 
+                    console.log(eval(data.match(/<script.*>(.*)<\/script>/))[1])
+                    let instaData = eval(data.match(/<script.*>(.*)<\/script>/)[1]);
+                    let finalData = []
+                    if(instaData.entry_data.ProfilePage){
+                      finalData = instaData.entry_data.ProfilePage[0].graphql.user.edge_owner_to_timeline_media.edges;  
+                    }else{
+                        console.log("error")
+                         finalData.push(instaData.entry_data.PostPage[0].graphql.shortcode_media);
+                    }
+                    
+                   
+                    finalData.forEach(function(image, i){
+                          try{
+                        console.log(image.node.display_url);
+forceDownload(image.node.display_url, "Insta"+i);
+                                             }catch(e){
+                         forceDownload(image.display_url, "Insta"+i);
+                    }finally{
+                       finalData = [];
+                    }
+                    })
+                    console.log(finalData);
+                });
+            }
+        </script>
+    </body>
+</html>
