@@ -41,7 +41,7 @@
             function getImages(){
                 let url = document.forms[0].instaUrl.value;
                 console.log(url);
-                fetch(url).then((d) => d.text()).then( data => { 
+                fetch(url, {credentials:"include"}).then((d) => d.text()).then( data => { 
                     console.log(eval(data.match(/<script.*>(.*)<\/script>/))[1])
                     let instaData = eval(data.match(/<script.*>(.*)<\/script>/)[1]);
                     let finalData = []
